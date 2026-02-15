@@ -1,0 +1,6 @@
+export const AUTH_ADMIN_ERROR_CODES = {
+  UNAUTHORIZED: "AUTH_ADMIN_UNAUTHORIZED",
+  DELETE_FAILED: "AUTH_ADMIN_DELETE_FAILED"
+} as const
+export type AuthAdminErrorCode =
+  (typeof AUTH_ADMIN_ERROR_CODES)[keyof typeof AUTH_ADMIN_ERROR_CODES]
