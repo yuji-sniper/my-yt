@@ -11,7 +11,7 @@
 1. 以下のコマンドでIssueの内容を取得してください:
 
 ```bash
-gh issue view $ARGUMENTS --repo yuji-sniper/next-vibe-template
+gh issue view $ARGUMENTS --repo yuji-sniper/my-yt
 ```
 
 2. Issueの内容を確認し、以下を把握してください:
