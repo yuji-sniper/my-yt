@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     default: serviceName
   },
   description: serviceDescription,
-  keywords: ["Next.js", "React", "Vibe coding"],
+  keywords: [],
   authors: [{ name: authorName, url: env.NEXT_PUBLIC_ORIGIN }],
   creator: authorName,
   publisher: authorName,
