@@ -1,14 +1,21 @@
-export const VIDEO_DURATION_VALUES = ["any", "short", "medium", "long"] as const
-export type VideoDuration = (typeof VIDEO_DURATION_VALUES)[number]
+export const VIDEO_DURATIONS = {
+  any: "any",
+  short: "short",
+  medium: "medium",
+  long: "long"
+} as const
+export type VideoDuration =
+  (typeof VIDEO_DURATIONS)[keyof typeof VIDEO_DURATIONS]
 
-export const VIDEO_SEARCH_ORDER_VALUES = [
-  "relevance",
-  "date",
-  "rating",
-  "title",
-  "viewCount"
-] as const
-export type VideoSearchOrder = (typeof VIDEO_SEARCH_ORDER_VALUES)[number]
+export const VIDEO_SEARCH_ORDERS = {
+  relevance: "relevance",
+  date: "date",
+  rating: "rating",
+  title: "title",
+  viewCount: "viewCount"
+} as const
+export type VideoSearchOrder =
+  (typeof VIDEO_SEARCH_ORDERS)[keyof typeof VIDEO_SEARCH_ORDERS]
 
 export type TrendingVideo = {
   videoId: string

@@ -31,8 +31,8 @@ import {
 import { cn } from "@/lib/shadcn/utils"
 import {
   type SearchTrendingVideosParams,
-  VIDEO_DURATION_VALUES,
-  VIDEO_SEARCH_ORDER_VALUES
+  VIDEO_DURATIONS,
+  VIDEO_SEARCH_ORDERS
 } from "../../../types/trending-video"
 import type { VideoCategory } from "../../../types/video-category"
 
@@ -45,8 +45,8 @@ const videoSearchFormSchema = z
     customDateTo: z.date().optional(),
     regionCode: z.enum(["none", "JP", "US"]),
     relevanceLanguage: z.enum(["none", "ja", "en"]),
-    videoDuration: z.enum(VIDEO_DURATION_VALUES),
-    order: z.enum(VIDEO_SEARCH_ORDER_VALUES)
+    videoDuration: z.enum(VIDEO_DURATIONS),
+    order: z.enum(VIDEO_SEARCH_ORDERS)
   })
   .refine(
     (data) => {
@@ -68,8 +68,8 @@ const VIDEO_SEARCH_FORM_DEFAULTS: VideoSearchFormValues = {
   customDateTo: undefined,
   regionCode: "none",
   relevanceLanguage: "none",
-  videoDuration: "any",
-  order: "viewCount"
+  videoDuration: VIDEO_DURATIONS.any,
+  order: VIDEO_SEARCH_ORDERS.viewCount
 }
 
 type Props = {
@@ -79,7 +79,8 @@ type Props = {
 }
 
 function truncateToDate(date: Date): string {
-  return date.toISOString().split("T")[0] + "T00:00:00.000Z"
+  const dateString = date.toISOString().split("T")[0]
+  return `${dateString}T00:00:00.000Z`
 }
 
 function calculatePublishedAfter(

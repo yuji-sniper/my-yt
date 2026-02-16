@@ -1,12 +1,13 @@
-export const CHANNEL_SEARCH_ORDER_VALUES = [
-  "relevance",
-  "date",
-  "rating",
-  "title",
-  "videoCount",
-  "viewCount"
-] as const
-export type ChannelSearchOrder = (typeof CHANNEL_SEARCH_ORDER_VALUES)[number]
+export const CHANNEL_SEARCH_ORDERS = {
+  relevance: "relevance",
+  date: "date",
+  rating: "rating",
+  title: "title",
+  videoCount: "videoCount",
+  viewCount: "viewCount"
+} as const
+export type ChannelSearchOrder =
+  (typeof CHANNEL_SEARCH_ORDERS)[keyof typeof CHANNEL_SEARCH_ORDERS]
 
 export type GrowingChannel = {
   channelId: string

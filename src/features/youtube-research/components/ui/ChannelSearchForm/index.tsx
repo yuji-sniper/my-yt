@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/select"
 import { cn } from "@/lib/shadcn/utils"
 import {
-  CHANNEL_SEARCH_ORDER_VALUES,
+  CHANNEL_SEARCH_ORDERS,
   type SearchGrowingChannelsParams
 } from "../../../types/growing-channel"
 
@@ -42,7 +42,7 @@ const channelSearchFormSchema = z
     customDateTo: z.date().optional(),
     regionCode: z.enum(["none", "JP", "US"]),
     relevanceLanguage: z.enum(["none", "ja", "en"]),
-    order: z.enum(CHANNEL_SEARCH_ORDER_VALUES)
+    order: z.enum(CHANNEL_SEARCH_ORDERS)
   })
   .refine(
     (data) => {
@@ -63,7 +63,7 @@ const CHANNEL_SEARCH_FORM_DEFAULTS: ChannelSearchFormValues = {
   customDateTo: undefined,
   regionCode: "none",
   relevanceLanguage: "none",
-  order: "viewCount"
+  order: CHANNEL_SEARCH_ORDERS.viewCount
 }
 
 type Props = {
@@ -72,7 +72,8 @@ type Props = {
 }
 
 const truncateToDate = (date: Date): string => {
-  return date.toISOString().split("T")[0] + "T00:00:00.000Z"
+  const dateString = date.toISOString().split("T")[0]
+  return `${dateString}T00:00:00.000Z`
 }
 
 const calculatePublishedAfter = (
