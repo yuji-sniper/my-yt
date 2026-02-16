@@ -38,9 +38,9 @@ export default async function UserAuthenticatedLayout({
     <SidebarProvider>
       <UserSidebar />
       <SidebarInset>
-        <div className="sticky top-0 z-50 px-2 pt-2">
+        <header className="sticky top-0 z-50 px-2 pt-2">
           <SidebarTrigger />
-        </div>
+        </header>
         <main className="flex-1 overflow-y-auto">
           <HydrationBoundary state={dehydrate(queryClient)}>
             {children}
