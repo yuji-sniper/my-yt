@@ -12,7 +12,7 @@ export class GrowingChannel {
     public readonly videoCount: number,
     public readonly publishedAt: string,
     public readonly daysSinceCreation: number,
-    public readonly growthSpeed: number | null
+    public readonly growthSpeed: number
   ) {}
 
   static create(channel: YouTubeChannel): GrowingChannel {
@@ -29,9 +29,7 @@ export class GrowingChannel {
       )
     )
 
-    const growthSpeed = channel.statistics.hiddenSubscriberCount
-      ? null
-      : subscriberCount / daysSinceCreation
+    const growthSpeed = viewCount / daysSinceCreation
 
     return new GrowingChannel(
       channel.id,

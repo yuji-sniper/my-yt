@@ -42,8 +42,6 @@ const channelSearchFormSchema = z
     customDateTo: z.date().optional(),
     regionCode: z.enum(["none", "JP", "US"]),
     relevanceLanguage: z.enum(["none", "ja", "en"]),
-    subscriberCountMin: z.string().optional(),
-    subscriberCountMax: z.string().optional(),
     order: z.enum(CHANNEL_SEARCH_ORDER_VALUES)
   })
   .refine(
@@ -65,8 +63,6 @@ const CHANNEL_SEARCH_FORM_DEFAULTS: ChannelSearchFormValues = {
   customDateTo: undefined,
   regionCode: "none",
   relevanceLanguage: "none",
-  subscriberCountMin: "",
-  subscriberCountMax: "",
   order: "date"
 }
 
@@ -139,14 +135,6 @@ export function ChannelSearchForm({ onSearch, isSearching }: Props) {
     if (values.regionCode !== "none") params.regionCode = values.regionCode
     if (values.relevanceLanguage !== "none")
       params.relevanceLanguage = values.relevanceLanguage
-    if (values.subscriberCountMin) {
-      const min = Number.parseInt(values.subscriberCountMin, 10)
-      if (!Number.isNaN(min)) params.subscriberCountMin = min
-    }
-    if (values.subscriberCountMax) {
-      const max = Number.parseInt(values.subscriberCountMax, 10)
-      if (!Number.isNaN(max)) params.subscriberCountMax = max
-    }
     if (values.order !== "date") params.order = values.order
 
     onSearch(params)
@@ -265,34 +253,6 @@ export function ChannelSearchForm({ onSearch, isSearching }: Props) {
                     </SelectItem>
                   </SelectContent>
                 </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="subscriberCountMin"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t("channelSearch.subscriberCount")}</FormLabel>
-                <div className="flex items-center gap-2">
-                  <FormControl>
-                    <Input
-                      type="number"
-                      min="0"
-                      placeholder={t("channelSearch.subscriberMin")}
-                      {...field}
-                    />
-                  </FormControl>
-                  <span className="text-muted-foreground">〜</span>
-                  <Input
-                    type="number"
-                    min="0"
-                    placeholder={t("channelSearch.subscriberMax")}
-                    {...form.register("subscriberCountMax")}
-                  />
-                </div>
                 <FormMessage />
               </FormItem>
             )}

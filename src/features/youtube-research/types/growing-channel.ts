@@ -19,7 +19,7 @@ export type GrowingChannel = {
   videoCount: number
   publishedAt: string
   daysSinceCreation: number
-  growthSpeed: number | null
+  growthSpeed: number
 }
 
 export type SearchGrowingChannelsParams = {
@@ -28,13 +28,9 @@ export type SearchGrowingChannelsParams = {
   publishedBefore?: string
   regionCode?: string
   relevanceLanguage?: string
-  subscriberCountMin?: number
-  subscriberCountMax?: number
   order?: ChannelSearchOrder
   pageToken?: string
 }
-
-export type ChannelSortKey = "growthSpeed" | "subscriberCount" | "viewCount"
 
 export type SearchGrowingChannelsResponse = {
   items: GrowingChannel[]

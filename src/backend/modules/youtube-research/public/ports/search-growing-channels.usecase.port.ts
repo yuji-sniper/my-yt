@@ -6,8 +6,6 @@ export interface SearchGrowingChannelsUseCasePortInput {
   publishedBefore?: string
   regionCode?: string
   relevanceLanguage?: string
-  subscriberCountMin?: number
-  subscriberCountMax?: number
   order?: ChannelSearchOrder
   pageToken?: string
 }
@@ -23,7 +21,7 @@ export interface SearchGrowingChannelsResultItem {
   videoCount: number
   publishedAt: string
   daysSinceCreation: number
-  growthSpeed: number | null
+  growthSpeed: number
 }
 
 export interface SearchGrowingChannelsUseCasePortOutput {

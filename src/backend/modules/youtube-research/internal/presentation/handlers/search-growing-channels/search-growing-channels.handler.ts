@@ -20,8 +20,6 @@ const searchGrowingChannelsSchema = z.object({
   publishedBefore: z.string().optional(),
   regionCode: z.string().length(2).optional(),
   relevanceLanguage: z.string().min(2).max(5).optional(),
-  subscriberCountMin: z.number().int().min(0).optional(),
-  subscriberCountMax: z.number().int().min(0).optional(),
   order: z.enum(CHANNEL_SEARCH_ORDER_VALUES).optional(),
   pageToken: z.string().optional()
 })

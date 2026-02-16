@@ -1,7 +1,7 @@
 "use client"
 
 import { useLocale, useTranslations } from "next-intl"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { useGetVideoCategoriesQuery } from "@/features/youtube-research/hooks/queries/useGetVideoCategoriesQuery"
 import { useSearchTrendingVideosQuery } from "@/features/youtube-research/hooks/queries/useSearchTrendingVideosQuery"
@@ -49,9 +49,11 @@ export function VideosContainer() {
     isError: isVideosError
   } = useSearchTrendingVideosQuery(searchParams)
 
-  if (isVideosError) {
-    toast.error(t("errors.searchFailed"))
-  }
+  useEffect(() => {
+    if (isVideosError) {
+      toast.error(t("errors.searchFailed"))
+    }
+  }, [isVideosError, t])
 
   const handleSearch = (params: SearchTrendingVideosParams) => {
     setSearchParams(params)

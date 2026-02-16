@@ -5,7 +5,15 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts")
 
 const nextConfig: NextConfig = {
   /* config options here */
-  reactCompiler: true
+  reactCompiler: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "yt3.ggpht.com"
+      }
+    ]
+  }
 }
 
 export default withNextIntl(nextConfig)

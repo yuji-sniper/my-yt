@@ -35,8 +35,6 @@ export class SearchGrowingChannelsUseCase
       publishedBefore: input.publishedBefore,
       regionCode: input.regionCode,
       relevanceLanguage: input.relevanceLanguage,
-      subscriberCountMin: input.subscriberCountMin,
-      subscriberCountMax: input.subscriberCountMax,
       order: input.order,
       pageToken: input.pageToken
     })
@@ -83,30 +81,9 @@ export class SearchGrowingChannelsUseCase
       GrowingChannel.create(channel)
     )
 
-    // 6. 登録者数の範囲フィルタをアプリ側で適用
-    const filtered = growingChannels.filter((gc) => {
-      // hiddenSubscriberCount のチャンネルはフィルタ対象外として通す
-      if (gc.growthSpeed === null) {
-        return true
-      }
-      if (
-        input.subscriberCountMin !== undefined &&
-        gc.subscriberCount < input.subscriberCountMin
-      ) {
-        return false
-      }
-      if (
-        input.subscriberCountMax !== undefined &&
-        gc.subscriberCount > input.subscriberCountMax
-      ) {
-        return false
-      }
-      return true
-    })
-
-    // 7. DTO に変換
+    // 6. DTO に変換
     const result: SearchGrowingChannelsUseCasePortOutput = {
-      items: filtered.map((gc) => ({
+      items: growingChannels.map((gc) => ({
         channelId: gc.channelId,
         title: gc.title,
         description: gc.description,
@@ -124,7 +101,7 @@ export class SearchGrowingChannelsUseCase
       quotaUsed: SEARCH_LIST_QUOTA + CHANNELS_LIST_QUOTA
     }
 
-    // 8. キャッシュに保存
+    // 7. キャッシュに保存
     await this.cache.set(cacheKey, "growing-channel", result)
 
     return result

@@ -38,8 +38,6 @@ function truncateDescription(description: string, maxLength: number): string {
 export function ChannelResultCard({ channel, locale }: Props) {
   const t = useTranslations("youtubeResearch")
 
-  const isSubscriberHidden = channel.growthSpeed === null
-
   return (
     <div
       data-slot="channel-result-card"
@@ -77,9 +75,7 @@ export function ChannelResultCard({ channel, locale }: Props) {
         <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
             <Users className="size-3.5" />
-            {isSubscriberHidden
-              ? t("channelResult.subscriberHidden")
-              : formatNumber(channel.subscriberCount, locale)}
+            {formatNumber(channel.subscriberCount, locale)}
           </span>
           <span className="flex items-center gap-1">
             <Eye className="size-3.5" />
@@ -102,9 +98,7 @@ export function ChannelResultCard({ channel, locale }: Props) {
           </span>
           <Badge variant="secondary" className="text-xs">
             <TrendingUp className="mr-1 size-3" />
-            {isSubscriberHidden
-              ? "-"
-              : `${channel.growthSpeed?.toFixed(1)} ${t("channelResult.growthSpeedUnit")}`}
+            {`${channel.growthSpeed.toFixed(1)} ${t("channelResult.growthSpeedUnit")}`}
           </Badge>
         </div>
       </div>
