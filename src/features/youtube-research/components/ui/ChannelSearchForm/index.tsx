@@ -63,7 +63,7 @@ const CHANNEL_SEARCH_FORM_DEFAULTS: ChannelSearchFormValues = {
   customDateTo: undefined,
   regionCode: "none",
   relevanceLanguage: "none",
-  order: "date"
+  order: "viewCount"
 }
 
 type Props = {
@@ -71,12 +71,16 @@ type Props = {
   isSearching: boolean
 }
 
+const truncateToDate = (date: Date): string => {
+  return date.toISOString().split("T")[0] + "T00:00:00.000Z"
+}
+
 const calculatePublishedAfter = (
   period: ChannelSearchFormValues["period"],
   customDateFrom?: Date
 ): string => {
   if (period === "custom" && customDateFrom) {
-    return customDateFrom.toISOString()
+    return truncateToDate(customDateFrom)
   }
 
   const now = new Date()
@@ -88,7 +92,7 @@ const calculatePublishedAfter = (
 
   const months = monthsMap[period] ?? 3
   now.setMonth(now.getMonth() - months)
-  return now.toISOString()
+  return truncateToDate(now)
 }
 
 const calculatePublishedBefore = (
@@ -96,7 +100,7 @@ const calculatePublishedBefore = (
   customDateTo?: Date
 ): string | undefined => {
   if (period === "custom" && customDateTo) {
-    return customDateTo.toISOString()
+    return truncateToDate(customDateTo)
   }
   return undefined
 }

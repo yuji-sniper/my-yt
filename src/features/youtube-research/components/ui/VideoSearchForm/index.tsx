@@ -69,7 +69,7 @@ const VIDEO_SEARCH_FORM_DEFAULTS: VideoSearchFormValues = {
   regionCode: "none",
   relevanceLanguage: "none",
   videoDuration: "any",
-  order: "relevance"
+  order: "viewCount"
 }
 
 type Props = {
@@ -78,12 +78,16 @@ type Props = {
   isSearching: boolean
 }
 
+function truncateToDate(date: Date): string {
+  return date.toISOString().split("T")[0] + "T00:00:00.000Z"
+}
+
 function calculatePublishedAfter(
   period: VideoSearchFormValues["period"],
   customDateFrom?: Date
 ): string {
   if (period === "custom" && customDateFrom) {
-    return customDateFrom.toISOString()
+    return truncateToDate(customDateFrom)
   }
 
   const now = new Date()
@@ -95,7 +99,7 @@ function calculatePublishedAfter(
 
   const days = daysMap[period] ?? 7
   now.setDate(now.getDate() - days)
-  return now.toISOString()
+  return truncateToDate(now)
 }
 
 function calculatePublishedBefore(
@@ -103,7 +107,7 @@ function calculatePublishedBefore(
   customDateTo?: Date
 ): string | undefined {
   if (period === "custom" && customDateTo) {
-    return customDateTo.toISOString()
+    return truncateToDate(customDateTo)
   }
   return undefined
 }
