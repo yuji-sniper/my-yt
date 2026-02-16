@@ -1,21 +1,34 @@
 "use client"
 
+import { ArrowDownUp } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
-import type { GrowingChannel } from "../../../types/growing-channel"
+import { cn } from "@/lib/shadcn/utils"
+import {
+  CHANNEL_SORT_KEYS,
+  type ChannelSortKey,
+  type GrowingChannel
+} from "../../../types/growing-channel"
 import { ChannelResultCard } from "../ChannelResultCard"
 
 type Props = {
   channels: GrowingChannel[]
   isLoading: boolean
   hasSearched: boolean
+  sortKey: ChannelSortKey
+  onSortChange: (key: ChannelSortKey) => void
   locale: string
 }
+
+const SORT_OPTIONS = Object.values(CHANNEL_SORT_KEYS)
 
 export function ChannelResultList({
   channels,
   isLoading,
   hasSearched,
+  sortKey,
+  onSortChange,
   locale
 }: Props) {
   const t = useTranslations("youtubeResearch")
@@ -48,14 +61,33 @@ export function ChannelResultList({
   }
 
   return (
-    <div className="flex flex-col gap-3">
-      {channels.map((channel) => (
-        <ChannelResultCard
-          key={channel.channelId}
-          channel={channel}
-          locale={locale}
-        />
-      ))}
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-2">
+        <ArrowDownUp className="size-4 text-muted-foreground" />
+        <div className="flex gap-1">
+          {SORT_OPTIONS.map((key) => (
+            <Button
+              key={key}
+              variant={sortKey === key ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => onSortChange(key)}
+              className={cn("text-xs", sortKey === key && "font-medium")}
+            >
+              {t(`channelResult.sort.${key}`)}
+            </Button>
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        {channels.map((channel) => (
+          <ChannelResultCard
+            key={channel.channelId}
+            channel={channel}
+            locale={locale}
+          />
+        ))}
+      </div>
     </div>
   )
 }

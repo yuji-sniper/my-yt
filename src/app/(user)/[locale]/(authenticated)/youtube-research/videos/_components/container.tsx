@@ -5,10 +5,11 @@ import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { useGetVideoCategoriesQuery } from "@/features/youtube-research/hooks/queries/useGetVideoCategoriesQuery"
 import { useSearchTrendingVideosQuery } from "@/features/youtube-research/hooks/queries/useSearchTrendingVideosQuery"
-import type {
-  SearchTrendingVideosParams,
-  SortKey,
-  TrendingVideo
+import {
+  type SearchTrendingVideosParams,
+  type SortKey,
+  type TrendingVideo,
+  VIDEO_SORT_KEYS
 } from "@/features/youtube-research/types/trending-video"
 import { VideosPresentational } from "./presentational"
 
@@ -18,11 +19,11 @@ const sortVideos = (
 ): TrendingVideo[] => {
   return [...videos].sort((a, b) => {
     switch (sortKey) {
-      case "viewCount":
+      case VIDEO_SORT_KEYS.viewCount:
         return b.viewCount - a.viewCount
-      case "engagementRate":
+      case VIDEO_SORT_KEYS.engagementRate:
         return b.engagementRate - a.engagementRate
-      case "publishedAt":
+      case VIDEO_SORT_KEYS.publishedAt:
         return (
           new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
         )
@@ -38,7 +39,7 @@ export function VideosContainer() {
 
   const [searchParams, setSearchParams] =
     useState<SearchTrendingVideosParams | null>(null)
-  const [sortKey, setSortKey] = useState<SortKey>("viewCount")
+  const [sortKey, setSortKey] = useState<SortKey>(VIDEO_SORT_KEYS.viewCount)
   const [pageTokenHistory, setPageTokenHistory] = useState<string[]>([])
   const [hasSearched, setHasSearched] = useState(false)
 
@@ -59,7 +60,7 @@ export function VideosContainer() {
     setSearchParams(params)
     setPageTokenHistory([])
     setHasSearched(true)
-    setSortKey("viewCount")
+    setSortKey(VIDEO_SORT_KEYS.viewCount)
   }
 
   const handleSortChange = (key: SortKey) => {

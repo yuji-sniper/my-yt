@@ -5,7 +5,11 @@ import { useTranslations } from "next-intl"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/shadcn/utils"
-import type { SortKey, TrendingVideo } from "../../../types/trending-video"
+import {
+  type SortKey,
+  type TrendingVideo,
+  VIDEO_SORT_KEYS
+} from "../../../types/trending-video"
 import { VideoResultCard } from "../VideoResultCard"
 
 type Props = {
@@ -17,7 +21,7 @@ type Props = {
   locale: string
 }
 
-const SORT_OPTIONS: SortKey[] = ["viewCount", "engagementRate", "publishedAt"]
+const SORT_OPTIONS = Object.values(VIDEO_SORT_KEYS)
 
 export function VideoResultList({
   videos,

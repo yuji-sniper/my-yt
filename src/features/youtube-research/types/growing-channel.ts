@@ -22,6 +22,14 @@ export type GrowingChannel = {
   growthSpeed: number
 }
 
+export const CHANNEL_SORT_KEYS = {
+  growthSpeed: "growthSpeed",
+  subscriberCount: "subscriberCount",
+  viewCount: "viewCount"
+} as const
+export type ChannelSortKey =
+  (typeof CHANNEL_SORT_KEYS)[keyof typeof CHANNEL_SORT_KEYS]
+
 export type SearchGrowingChannelsParams = {
   keyword?: string
   publishedAfter: string

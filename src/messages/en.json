@@ -264,7 +264,7 @@
       "publishedAt": "Created",
       "daysSinceCreation": "{days} days",
       "growthSpeed": "Growth Speed",
-      "growthSpeedUnit": "subs/day",
+      "growthSpeedUnit": "times/day",
       "subscriberHidden": "Hidden"
     },
     "errors": {

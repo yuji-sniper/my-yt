@@ -264,7 +264,7 @@
       "publishedAt": "開設日",
       "daysSinceCreation": "{days}日",
       "growthSpeed": "成長速度",
-      "growthSpeedUnit": "人/日",
+      "growthSpeedUnit": "回/日",
       "subscriberHidden": "非公開"
     },
     "errors": {

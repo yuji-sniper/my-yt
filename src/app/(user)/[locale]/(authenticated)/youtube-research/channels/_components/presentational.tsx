@@ -4,6 +4,7 @@ import { ChannelResultList } from "@/features/youtube-research/components/ui/Cha
 import { ChannelResultPagination } from "@/features/youtube-research/components/ui/ChannelResultPagination"
 import { ChannelSearchForm } from "@/features/youtube-research/components/ui/ChannelSearchForm"
 import type {
+  ChannelSortKey,
   GrowingChannel,
   SearchGrowingChannelsParams
 } from "@/features/youtube-research/types/growing-channel"
@@ -12,6 +13,8 @@ type Props = {
   channels: GrowingChannel[]
   isLoading: boolean
   hasSearched: boolean
+  sortKey: ChannelSortKey
+  onSortChange: (key: ChannelSortKey) => void
   onSearch: (params: SearchGrowingChannelsParams) => void
   hasNextPage: boolean
   canGoPrevious: boolean
@@ -24,6 +27,8 @@ export function ChannelsPresentational({
   channels,
   isLoading,
   hasSearched,
+  sortKey,
+  onSortChange,
   onSearch,
   hasNextPage,
   canGoPrevious,
@@ -39,6 +44,8 @@ export function ChannelsPresentational({
         channels={channels}
         isLoading={isLoading}
         hasSearched={hasSearched}
+        sortKey={sortKey}
+        onSortChange={onSortChange}
         locale={locale}
       />
 

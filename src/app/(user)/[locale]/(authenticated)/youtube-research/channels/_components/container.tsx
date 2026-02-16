@@ -4,8 +4,31 @@ import { useLocale, useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { useSearchGrowingChannelsQuery } from "@/features/youtube-research/hooks/queries/useSearchGrowingChannelsQuery"
-import type { SearchGrowingChannelsParams } from "@/features/youtube-research/types/growing-channel"
+import {
+  CHANNEL_SORT_KEYS,
+  type ChannelSortKey,
+  type GrowingChannel,
+  type SearchGrowingChannelsParams
+} from "@/features/youtube-research/types/growing-channel"
 import { ChannelsPresentational } from "./presentational"
+
+const sortChannels = (
+  channels: GrowingChannel[],
+  sortKey: ChannelSortKey
+): GrowingChannel[] => {
+  return [...channels].sort((a, b) => {
+    switch (sortKey) {
+      case CHANNEL_SORT_KEYS.growthSpeed:
+        return b.growthSpeed - a.growthSpeed
+      case CHANNEL_SORT_KEYS.subscriberCount:
+        return b.subscriberCount - a.subscriberCount
+      case CHANNEL_SORT_KEYS.viewCount:
+        return b.viewCount - a.viewCount
+      default:
+        return 0
+    }
+  })
+}
 
 export function ChannelsContainer() {
   const locale = useLocale()
@@ -13,6 +36,9 @@ export function ChannelsContainer() {
 
   const [searchParams, setSearchParams] =
     useState<SearchGrowingChannelsParams | null>(null)
+  const [sortKey, setSortKey] = useState<ChannelSortKey>(
+    CHANNEL_SORT_KEYS.growthSpeed
+  )
   const [pageTokenHistory, setPageTokenHistory] = useState<string[]>([])
   const [hasSearched, setHasSearched] = useState(false)
 
@@ -32,6 +58,11 @@ export function ChannelsContainer() {
     setSearchParams(params)
     setPageTokenHistory([])
     setHasSearched(true)
+    setSortKey(CHANNEL_SORT_KEYS.viewCount)
+  }
+
+  const handleSortChange = (key: ChannelSortKey) => {
+    setSortKey(key)
   }
 
   const handleNextPage = () => {
@@ -50,11 +81,17 @@ export function ChannelsContainer() {
     })
   }
 
+  const sortedChannels = channelsData
+    ? sortChannels(channelsData.items, sortKey)
+    : []
+
   return (
     <ChannelsPresentational
-      channels={channelsData?.items ?? []}
+      channels={sortedChannels}
       isLoading={isChannelsFetching}
       hasSearched={hasSearched}
+      sortKey={sortKey}
+      onSortChange={handleSortChange}
       onSearch={handleSearch}
       hasNextPage={!!channelsData?.nextPageToken}
       canGoPrevious={pageTokenHistory.length > 0}

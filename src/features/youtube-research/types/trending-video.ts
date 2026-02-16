@@ -36,7 +36,12 @@ export type SearchTrendingVideosParams = {
   pageToken?: string
 }
 
-export type SortKey = "viewCount" | "engagementRate" | "publishedAt"
+export const VIDEO_SORT_KEYS = {
+  viewCount: "viewCount",
+  engagementRate: "engagementRate",
+  publishedAt: "publishedAt"
+} as const
+export type SortKey = (typeof VIDEO_SORT_KEYS)[keyof typeof VIDEO_SORT_KEYS]
 
 export type SearchTrendingVideosResponse = {
   items: TrendingVideo[]
