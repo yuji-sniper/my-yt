@@ -5,6 +5,7 @@ import { initAuthAdminDependency } from "../../modules/auth-admin/internal/di"
 import { initBillingDependency } from "../../modules/billing/internal/di"
 import { initNotificationDependency } from "../../modules/notification/internal/di"
 import { initSharedDependency } from "../../modules/shared/di"
+import { initYoutubeResearchDependency } from "../../modules/youtube-research/internal/di"
 
 let initialized = false
 
@@ -20,6 +21,8 @@ const getContainer = () => {
     initBillingDependency(container)
     // notification
     initNotificationDependency(container)
+    // youtube-research
+    initYoutubeResearchDependency(container)
 
     initialized = true
   }

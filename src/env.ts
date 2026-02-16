@@ -18,7 +18,8 @@ export const env = createEnv({
     AWS_ROLE_ARN: z.string(),
     AWS_SCHEDULER_ROLE_ARN_NOTIFICATION: z.string(),
     AWS_SCHEDULER_GROUP_NAME_NOTIFICATION: z.string(),
-    AWS_LAMBDA_ARN_NOTIFICATION_FANOUT: z.string()
+    AWS_LAMBDA_ARN_NOTIFICATION_FANOUT: z.string(),
+    YOUTUBE_API_KEY: z.string()
   },
   client: {
     NEXT_PUBLIC_SERVICE_NAME: z.string(),
