@@ -29,7 +29,10 @@ import {
   SelectValue
 } from "@/components/ui/select"
 import { cn } from "@/lib/shadcn/utils"
-import type { SearchGrowingChannelsParams } from "../../../types/growing-channel"
+import {
+  CHANNEL_SEARCH_ORDER_VALUES,
+  type SearchGrowingChannelsParams
+} from "../../../types/growing-channel"
 
 const channelSearchFormSchema = z
   .object({
@@ -40,7 +43,8 @@ const channelSearchFormSchema = z
     regionCode: z.enum(["none", "JP", "US"]),
     relevanceLanguage: z.enum(["none", "ja", "en"]),
     subscriberCountMin: z.string().optional(),
-    subscriberCountMax: z.string().optional()
+    subscriberCountMax: z.string().optional(),
+    order: z.enum(CHANNEL_SEARCH_ORDER_VALUES)
   })
   .refine(
     (data) => {
@@ -62,7 +66,8 @@ const CHANNEL_SEARCH_FORM_DEFAULTS: ChannelSearchFormValues = {
   regionCode: "none",
   relevanceLanguage: "none",
   subscriberCountMin: "",
-  subscriberCountMax: ""
+  subscriberCountMax: "",
+  order: "date"
 }
 
 type Props = {
@@ -142,6 +147,7 @@ export function ChannelSearchForm({ onSearch, isSearching }: Props) {
       const max = Number.parseInt(values.subscriberCountMax, 10)
       if (!Number.isNaN(max)) params.subscriberCountMax = max
     }
+    if (values.order !== "date") params.order = values.order
 
     onSearch(params)
   }
@@ -287,6 +293,44 @@ export function ChannelSearchForm({ onSearch, isSearching }: Props) {
                     {...form.register("subscriberCountMax")}
                   />
                 </div>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="order"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("channelSearch.order")}</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="relevance">
+                      {t("channelSearch.orderOptions.relevance")}
+                    </SelectItem>
+                    <SelectItem value="date">
+                      {t("channelSearch.orderOptions.date")}
+                    </SelectItem>
+                    <SelectItem value="rating">
+                      {t("channelSearch.orderOptions.rating")}
+                    </SelectItem>
+                    <SelectItem value="title">
+                      {t("channelSearch.orderOptions.title")}
+                    </SelectItem>
+                    <SelectItem value="videoCount">
+                      {t("channelSearch.orderOptions.videoCount")}
+                    </SelectItem>
+                    <SelectItem value="viewCount">
+                      {t("channelSearch.orderOptions.viewCount")}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}

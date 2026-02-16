@@ -1,3 +1,5 @@
+import type { ChannelSearchOrder } from "@/backend/modules/youtube-research/internal/domain/youtube-api/youtube-api.types"
+
 export interface SearchGrowingChannelsUseCasePortInput {
   keyword?: string
   publishedAfter: string
@@ -6,6 +8,7 @@ export interface SearchGrowingChannelsUseCasePortInput {
   relevanceLanguage?: string
   subscriberCountMin?: number
   subscriberCountMax?: number
+  order?: ChannelSearchOrder
   pageToken?: string
 }
 

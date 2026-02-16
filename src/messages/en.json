@@ -236,6 +236,15 @@
       "subscriberCount": "Subscriber Count Range",
       "subscriberMin": "Min",
       "subscriberMax": "Max",
+      "order": "Sort Order",
+      "orderOptions": {
+        "relevance": "Relevance",
+        "date": "Creation Date",
+        "rating": "Rating",
+        "title": "Title",
+        "videoCount": "Video Count",
+        "viewCount": "View Count"
+      },
       "button": "Search",
       "searching": "Searching..."
     },

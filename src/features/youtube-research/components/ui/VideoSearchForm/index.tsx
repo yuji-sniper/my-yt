@@ -29,7 +29,11 @@ import {
   SelectValue
 } from "@/components/ui/select"
 import { cn } from "@/lib/shadcn/utils"
-import type { SearchTrendingVideosParams } from "../../../types/trending-video"
+import {
+  type SearchTrendingVideosParams,
+  VIDEO_DURATION_VALUES,
+  VIDEO_SEARCH_ORDER_VALUES
+} from "../../../types/trending-video"
 import type { VideoCategory } from "../../../types/video-category"
 
 const videoSearchFormSchema = z
@@ -41,8 +45,8 @@ const videoSearchFormSchema = z
     customDateTo: z.date().optional(),
     regionCode: z.enum(["none", "JP", "US"]),
     relevanceLanguage: z.enum(["none", "ja", "en"]),
-    videoDuration: z.enum(["any", "short", "medium", "long"]),
-    order: z.enum(["relevance", "date", "rating", "title", "viewCount"])
+    videoDuration: z.enum(VIDEO_DURATION_VALUES),
+    order: z.enum(VIDEO_SEARCH_ORDER_VALUES)
   })
   .refine(
     (data) => {

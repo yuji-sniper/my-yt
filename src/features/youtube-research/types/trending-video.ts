@@ -1,7 +1,14 @@
-import type {
-  VideoDuration,
-  VideoSearchOrder
-} from "@/backend/modules/youtube-research/internal/domain/youtube-api/youtube-api.types"
+export const VIDEO_DURATION_VALUES = ["any", "short", "medium", "long"] as const
+export type VideoDuration = (typeof VIDEO_DURATION_VALUES)[number]
+
+export const VIDEO_SEARCH_ORDER_VALUES = [
+  "relevance",
+  "date",
+  "rating",
+  "title",
+  "viewCount"
+] as const
+export type VideoSearchOrder = (typeof VIDEO_SEARCH_ORDER_VALUES)[number]
 
 export type TrendingVideo = {
   videoId: string

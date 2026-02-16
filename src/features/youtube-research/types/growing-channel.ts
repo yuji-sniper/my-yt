@@ -1,3 +1,13 @@
+export const CHANNEL_SEARCH_ORDER_VALUES = [
+  "relevance",
+  "date",
+  "rating",
+  "title",
+  "videoCount",
+  "viewCount"
+] as const
+export type ChannelSearchOrder = (typeof CHANNEL_SEARCH_ORDER_VALUES)[number]
+
 export type GrowingChannel = {
   channelId: string
   title: string
@@ -20,6 +30,7 @@ export type SearchGrowingChannelsParams = {
   relevanceLanguage?: string
   subscriberCountMin?: number
   subscriberCountMax?: number
+  order?: ChannelSearchOrder
   pageToken?: string
 }
 

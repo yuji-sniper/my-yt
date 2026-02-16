@@ -4,6 +4,7 @@ import type { LoggerPort } from "@/backend/modules/shared/application/ports/logg
 import { LoggerPortToken } from "@/backend/modules/shared/application/ports/logger/logger.port"
 import type { Result } from "@/backend/modules/shared/presentation/handlers/types/result"
 import { formatZodErrors } from "@/backend/modules/shared/presentation/handlers/utils/format-zod-errors"
+import { CHANNEL_SEARCH_ORDER_VALUES } from "@/backend/modules/youtube-research/internal/domain/youtube-api/youtube-api.types"
 import { YouTubeApiRequestFailedError } from "@/backend/modules/youtube-research/public/errors/youtube-research.errors"
 import type {
   SearchGrowingChannelsResultItem,
@@ -21,6 +22,7 @@ const searchGrowingChannelsSchema = z.object({
   relevanceLanguage: z.string().min(2).max(5).optional(),
   subscriberCountMin: z.number().int().min(0).optional(),
   subscriberCountMax: z.number().int().min(0).optional(),
+  order: z.enum(CHANNEL_SEARCH_ORDER_VALUES).optional(),
   pageToken: z.string().optional()
 })
 

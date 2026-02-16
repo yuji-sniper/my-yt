@@ -37,6 +37,7 @@ export class SearchGrowingChannelsUseCase
       relevanceLanguage: input.relevanceLanguage,
       subscriberCountMin: input.subscriberCountMin,
       subscriberCountMax: input.subscriberCountMax,
+      order: input.order,
       pageToken: input.pageToken
     })
 
@@ -55,7 +56,7 @@ export class SearchGrowingChannelsUseCase
       regionCode: input.regionCode,
       relevanceLanguage: input.relevanceLanguage,
       pageToken: input.pageToken,
-      order: "date",
+      order: input.order,
       maxResults: 50
     })
 

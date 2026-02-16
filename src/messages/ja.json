@@ -236,6 +236,15 @@
       "subscriberCount": "登録者数範囲",
       "subscriberMin": "最小",
       "subscriberMax": "最大",
+      "order": "並び順",
+      "orderOptions": {
+        "relevance": "関連度順",
+        "date": "開設日順",
+        "rating": "評価順",
+        "title": "タイトル順",
+        "videoCount": "動画数順",
+        "viewCount": "再生回数順"
+      },
       "button": "検索",
       "searching": "検索中..."
     },
