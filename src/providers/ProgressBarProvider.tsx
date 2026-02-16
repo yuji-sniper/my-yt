@@ -7,7 +7,7 @@ export const ProgressBarProvider = ({ children }: PropsWithChildren) => {
   return (
     <AppProgressProvider
       height="2px"
-      color="oklch(0.205 0 0)"
+      color="oklch(0.541 0.215 265)"
       options={{ showSpinner: false }}
       shallowRouting
     >

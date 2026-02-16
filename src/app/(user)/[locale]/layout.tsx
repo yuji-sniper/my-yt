@@ -66,7 +66,7 @@ export default async function LocaleLayout({
   const messages = await getMessages()
 
   return (
-    <html lang="en">
+    <html lang={locale} className="dark">
       <body>
         <QueryProvider>
           <NextIntlClientProvider messages={messages}>

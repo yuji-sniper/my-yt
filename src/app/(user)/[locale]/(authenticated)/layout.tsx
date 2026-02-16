@@ -1,11 +1,16 @@
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
 import { redirect } from "next/navigation"
 import { setRequestLocale } from "next-intl/server"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger
+} from "@/components/ui/sidebar"
 import { Toaster } from "@/components/ui/sonner"
-import { AuthUserMenu } from "@/features/auth/components/layout/AuthUserMenu"
 import { getAuthUserQuery } from "@/features/auth/queries/get-auth-user"
 import { authUserKey } from "@/features/auth/queries/keys"
 import { getQueryClient } from "@/lib/react-query/query-client"
+import { UserSidebar } from "./_components/user-sidebar"
 
 export const dynamic = "force-dynamic"
 
@@ -30,18 +35,19 @@ export default async function UserAuthenticatedLayout({
   }
 
   return (
-    <div className="flex h-screen flex-col">
-      <header className="z-50 shrink-0 border-b bg-background">
-        <div className="container flex h-14 items-center justify-end">
-          <AuthUserMenu />
-        </div>
-      </header>
-      <main className="flex-1 overflow-y-auto">
-        <HydrationBoundary state={dehydrate(queryClient)}>
-          {children}
-        </HydrationBoundary>
-      </main>
+    <SidebarProvider>
+      <UserSidebar />
+      <SidebarInset>
+        <header className="sticky top-0 z-50 flex h-14 items-center gap-4 border-b bg-background px-4">
+          <SidebarTrigger />
+        </header>
+        <main className="flex-1 overflow-y-auto">
+          <HydrationBoundary state={dehydrate(queryClient)}>
+            {children}
+          </HydrationBoundary>
+        </main>
+      </SidebarInset>
       <Toaster />
-    </div>
+    </SidebarProvider>
   )
 }

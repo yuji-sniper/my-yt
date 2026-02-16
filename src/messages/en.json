@@ -11,6 +11,12 @@
     "title": "Top",
     "heading": "Top"
   },
+  "sidebar": {
+    "menu": "Menu",
+    "home": "Home",
+    "pricing": "Pricing",
+    "settings": "Settings"
+  },
   "userAccount": {
     "openMenu": "Open account menu",
     "settings": "Settings",

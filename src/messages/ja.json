@@ -11,6 +11,12 @@
     "title": "トップ",
     "heading": "トップ"
   },
+  "sidebar": {
+    "menu": "メニュー",
+    "home": "ホーム",
+    "pricing": "料金プラン",
+    "settings": "設定"
+  },
   "userAccount": {
     "openMenu": "アカウントメニューを開く",
     "settings": "設定",
