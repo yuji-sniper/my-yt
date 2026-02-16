@@ -551,27 +551,45 @@ export const QueryProvider = ({ children }: { children: React.ReactNode }) => {
 
 フォームなどでZodスキーマを定義している場合、手動で型を定義せず `z.infer` を使用する。スキーマと型が常に同期され、乖離を防げる。
 
-```tsx
-// features/{feature}/types/product-form.ts
-import { z } from "zod"
+**重要: フォーム用のZodスキーマ・デフォルト値・ヘルパー関数はフォームコンポーネントに配置する**
 
-export const productFormSchema = z.object({
+フォームのバリデーションスキーマ、デフォルト値、フォーム送信時の変換ロジックなどはフォームコンポーネントの関心事であるため、`types/` ディレクトリではなくフォームコンポーネント内に定義する。`types/` には複数ファイルから参照される共有型のみを配置する。
+
+```tsx
+// ❌ NG: フォームのスキーマを types/ に配置
+// features/{feature}/types/product-form.ts
+
+// ✅ OK: フォームコンポーネント内に配置
+// features/{feature}/components/ui/ProductForm/index.tsx
+"use client"
+
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+
+const productFormSchema = z.object({
   name: z.string().min(1, "商品名は必須です").max(255),
   description: z.string().max(5000).optional().or(z.literal("")),
   features: z.array(z.string()).optional(),
   displayOrder: z.number().int().min(0).optional()
 })
 
-// ❌ NG: 手動で型を定義（スキーマと乖離する可能性）
-// export type ProductFormValues = {
-//   name: string
-//   description?: string
-//   features?: string[]
-//   displayOrder?: number
-// }
+type ProductFormValues = z.infer<typeof productFormSchema>
 
-// ✅ OK: z.infer でスキーマから型を推論
-export type ProductFormValues = z.infer<typeof productFormSchema>
+const PRODUCT_FORM_DEFAULTS: ProductFormValues = {
+  name: "",
+  description: "",
+  features: [],
+  displayOrder: 0
+}
+
+export function ProductForm() {
+  const form = useForm<ProductFormValues>({
+    resolver: zodResolver(productFormSchema),
+    defaultValues: PRODUCT_FORM_DEFAULTS
+  })
+  // ...
+}
 ```
 
 ```tsx
@@ -1309,6 +1327,8 @@ pnpm type:check
 - [ ] 同一機能の複数ページで共有するコンポーネントは親ディレクトリの `_components/` に配置
 - [ ] 複数機能で共有するコンポーネントは `features/{feature}/components/` に配置
 - [ ] 型定義は `features/{feature}/types/` に独立して定義（バックエンドから import しない）
+- [ ] `types/` には複数ファイルから参照される共有型のみ配置
+- [ ] フォーム用 Zod スキーマ・デフォルト値・ヘルパー関数はフォームコンポーネント内に配置
 - [ ] Zodスキーマがある場合は `z.infer` で型を推論（手動定義しない）
 
 ### React Query

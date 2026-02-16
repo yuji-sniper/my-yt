@@ -7,10 +7,10 @@ import type { VideoCategoryRepository } from "@/backend/modules/youtube-research
 import { VideoCategoryRepositoryToken } from "@/backend/modules/youtube-research/internal/domain/video-category/video-category.repository"
 import type {
   GetVideoCategoriesUseCasePort,
-  GetVideoCategoriesUseCasePortInput,
   GetVideoCategoriesUseCasePortOutput
 } from "@/backend/modules/youtube-research/public/ports/get-video-categories.usecase.port"
 
+const REGION_CODE_JP = "JP"
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000 // 24 hours
 
 @injectable()
@@ -26,13 +26,10 @@ export class GetVideoCategoriesUseCase
     private readonly uuidV7Generator: UuidV7GeneratorPort
   ) {}
 
-  async handle(
-    input: GetVideoCategoriesUseCasePortInput
-  ): Promise<GetVideoCategoriesUseCasePortOutput> {
+  async handle(): Promise<GetVideoCategoriesUseCasePortOutput> {
     // 1. DB からキャッシュ検索
-    const cached = await this.videoCategoryRepository.findByRegionCode(
-      input.regionCode
-    )
+    const cached =
+      await this.videoCategoryRepository.findByRegionCode(REGION_CODE_JP)
 
     // 2. キャッシュヒット判定（レコードが存在し fetchedAt が24時間以内）
     if (cached.length > 0) {
@@ -51,9 +48,8 @@ export class GetVideoCategoriesUseCase
     }
 
     // 3. YouTube API からカテゴリ取得
-    const apiCategories = await this.youtubeApi.getVideoCategories(
-      input.regionCode
-    )
+    const apiCategories =
+      await this.youtubeApi.getVideoCategories(REGION_CODE_JP)
 
     // 4. DB に upsert
     const now = new Date()
@@ -62,7 +58,7 @@ export class GetVideoCategoriesUseCase
         id: this.uuidV7Generator.generate(),
         categoryId: category.id,
         title: category.snippet.title,
-        regionCode: input.regionCode,
+        regionCode: REGION_CODE_JP,
         assignable: category.snippet.assignable,
         fetchedAt: now
       }))

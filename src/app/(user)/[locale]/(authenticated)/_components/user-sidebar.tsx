@@ -1,6 +1,13 @@
 "use client"
 
-import { BarChart3, CreditCard, Home, LogOut, Settings } from "lucide-react"
+import {
+  BarChart3,
+  CreditCard,
+  Home,
+  LogOut,
+  MonitorPlay,
+  Settings
+} from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useLocale, useTranslations } from "next-intl"
@@ -44,6 +51,11 @@ export function UserSidebar() {
       title: t("home"),
       href: `/${locale}/home`,
       icon: Home
+    },
+    {
+      title: t("youtubeResearch"),
+      href: `/${locale}/youtube-research/videos`,
+      icon: MonitorPlay
     },
     {
       title: t("pricing"),

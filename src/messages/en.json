@@ -14,6 +14,7 @@
   "sidebar": {
     "menu": "Menu",
     "home": "Home",
+    "youtubeResearch": "Video Research",
     "pricing": "Pricing",
     "settings": "Settings"
   },
@@ -132,6 +133,75 @@
     "errors": {
       "checkoutFailed": "Failed to start checkout",
       "changeFailed": "Failed to change plan"
+    }
+  },
+  "youtubeResearch": {
+    "heading": "YouTube Research",
+    "nav": {
+      "videos": "Video Research",
+      "channels": "Channel Research"
+    },
+    "search": {
+      "keyword": "Keyword",
+      "keywordPlaceholder": "Enter search keyword",
+      "category": "Category",
+      "categoryPlaceholder": "Select a category",
+      "categoryDisabled": "Select a country first",
+      "categoryAll": "All categories",
+      "period": "Upload Period",
+      "periodOptions": {
+        "7d": "Last 7 days",
+        "30d": "Last 30 days",
+        "90d": "Last 90 days",
+        "custom": "Custom"
+      },
+      "dateFrom": "Start Date",
+      "dateTo": "End Date",
+      "datePlaceholder": "Select a date",
+      "region": "Country",
+      "regionOptions": {
+        "none": "Any",
+        "JP": "Japan",
+        "US": "United States"
+      },
+      "language": "Language",
+      "languageOptions": {
+        "none": "Any",
+        "ja": "Japanese",
+        "en": "English"
+      },
+      "duration": "Video Duration",
+      "durationOptions": {
+        "any": "Any",
+        "short": "Short (under 4 min)",
+        "medium": "Medium (4-20 min)",
+        "long": "Long (over 20 min)"
+      },
+      "button": "Search",
+      "searching": "Searching..."
+    },
+    "result": {
+      "sort": {
+        "viewCount": "Views",
+        "engagementRate": "Engagement Rate",
+        "publishedAt": "Published"
+      },
+      "empty": {
+        "initial": "Enter search criteria and click search",
+        "noResults": "No videos found"
+      },
+      "viewCount": "Views",
+      "likeCount": "Likes",
+      "commentCount": "Comments",
+      "engagementRate": "ER",
+      "publishedAt": "Published"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "errors": {
+      "searchFailed": "Failed to search videos"
     }
   },
   "errors": {
@@ -342,6 +412,10 @@
     "pricing": {
       "title": "Pricing",
       "description": "Choose the plan that fits your needs. Monthly and yearly options available."
+    },
+    "youtubeResearchVideos": {
+      "title": "Video Research",
+      "description": "Search and analyze trending videos to discover insights."
     }
   }
 }

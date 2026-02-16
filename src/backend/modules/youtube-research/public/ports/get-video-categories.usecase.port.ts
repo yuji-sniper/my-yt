@@ -1,7 +1,3 @@
-export interface GetVideoCategoriesUseCasePortInput {
-  regionCode: string
-}
-
 export interface GetVideoCategoriesResultItem {
   categoryId: string
   title: string
@@ -12,9 +8,7 @@ export interface GetVideoCategoriesUseCasePortOutput {
 }
 
 export interface GetVideoCategoriesUseCasePort {
-  handle(
-    input: GetVideoCategoriesUseCasePortInput
-  ): Promise<GetVideoCategoriesUseCasePortOutput>
+  handle(): Promise<GetVideoCategoriesUseCasePortOutput>
 }
 
 export const GetVideoCategoriesUseCasePortToken = Symbol(

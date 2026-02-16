@@ -1,25 +1,14 @@
 import { inject, injectable } from "tsyringe"
-import { z } from "zod"
 import type { LoggerPort } from "@/backend/modules/shared/application/ports/logger/logger.port"
 import { LoggerPortToken } from "@/backend/modules/shared/application/ports/logger/logger.port"
 import type { Result } from "@/backend/modules/shared/presentation/handlers/types/result"
-import { formatZodErrors } from "@/backend/modules/shared/presentation/handlers/utils/format-zod-errors"
 import { YouTubeApiRequestFailedError } from "@/backend/modules/youtube-research/public/errors/youtube-research.errors"
 import type {
   GetVideoCategoriesResultItem,
   GetVideoCategoriesUseCasePort
 } from "@/backend/modules/youtube-research/public/ports/get-video-categories.usecase.port"
 import { GetVideoCategoriesUseCasePortToken } from "@/backend/modules/youtube-research/public/ports/get-video-categories.usecase.port"
-import { COMMON_ERROR_CODES } from "@/shared/errors/common.errors"
 import { YOUTUBE_RESEARCH_ERROR_CODES } from "@/shared/errors/youtube-research.errors"
-
-const getVideoCategoriesSchema = z.object({
-  regionCode: z.string().length(2)
-})
-
-export type GetVideoCategoriesHandlerInput = z.input<
-  typeof getVideoCategoriesSchema
->
 
 export type GetVideoCategoriesHandlerResult = Result<{
   items: GetVideoCategoriesResultItem[]
@@ -30,9 +19,7 @@ export const GetVideoCategoriesHandlerToken = Symbol(
 )
 
 export interface GetVideoCategoriesHandler {
-  handle(
-    input: GetVideoCategoriesHandlerInput
-  ): Promise<GetVideoCategoriesHandlerResult>
+  handle(): Promise<GetVideoCategoriesHandlerResult>
 }
 
 @injectable()
@@ -46,25 +33,9 @@ export class GetVideoCategoriesHandlerImpl
     private readonly getVideoCategoriesUseCase: GetVideoCategoriesUseCasePort
   ) {}
 
-  async handle(
-    input: GetVideoCategoriesHandlerInput
-  ): Promise<GetVideoCategoriesHandlerResult> {
-    const parsed = getVideoCategoriesSchema.safeParse(input)
-
-    if (!parsed.success) {
-      return {
-        ok: false,
-        error: {
-          code: COMMON_ERROR_CODES.VALIDATION_ERROR,
-          status: 422,
-          message: "Validation failed",
-          fieldErrors: formatZodErrors(parsed.error)
-        }
-      }
-    }
-
+  async handle(): Promise<GetVideoCategoriesHandlerResult> {
     try {
-      const output = await this.getVideoCategoriesUseCase.handle(parsed.data)
+      const output = await this.getVideoCategoriesUseCase.handle()
 
       return {
         ok: true,
@@ -83,7 +54,6 @@ export class GetVideoCategoriesHandlerImpl
       }
 
       this.logger.error("Failed to get video categories", {
-        regionCode: parsed.data.regionCode,
         error: e instanceof Error ? e.message : String(e)
       })
 

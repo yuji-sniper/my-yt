@@ -29,7 +29,6 @@ import {
 } from "@/features/admin-notifications/types/notification-form"
 
 type NotificationFormProps = {
-  mode?: "create" | "edit"
   defaultValues?: Partial<NotificationFormValues>
   onSubmit: (values: NotificationFormValues) => void
   isPending: boolean
@@ -37,7 +36,6 @@ type NotificationFormProps = {
 }
 
 export const NotificationForm = ({
-  mode = "create",
   defaultValues,
   onSubmit,
   isPending,

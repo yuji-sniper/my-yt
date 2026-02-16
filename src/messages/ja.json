@@ -14,6 +14,7 @@
   "sidebar": {
     "menu": "メニュー",
     "home": "ホーム",
+    "youtubeResearch": "動画リサーチ",
     "pricing": "料金プラン",
     "settings": "設定"
   },
@@ -132,6 +133,75 @@
     "errors": {
       "checkoutFailed": "チェックアウトの開始に失敗しました",
       "changeFailed": "プランの変更に失敗しました"
+    }
+  },
+  "youtubeResearch": {
+    "heading": "YouTube リサーチ",
+    "nav": {
+      "videos": "動画リサーチ",
+      "channels": "チャンネルリサーチ"
+    },
+    "search": {
+      "keyword": "キーワード",
+      "keywordPlaceholder": "検索キーワードを入力",
+      "category": "カテゴリ",
+      "categoryPlaceholder": "カテゴリを選択",
+      "categoryDisabled": "国を選択してください",
+      "categoryAll": "すべてのカテゴリ",
+      "period": "アップロード期間",
+      "periodOptions": {
+        "7d": "直近7日",
+        "30d": "直近30日",
+        "90d": "直近90日",
+        "custom": "カスタム"
+      },
+      "dateFrom": "開始日",
+      "dateTo": "終了日",
+      "datePlaceholder": "日付を選択",
+      "region": "国",
+      "regionOptions": {
+        "none": "指定なし",
+        "JP": "日本",
+        "US": "アメリカ"
+      },
+      "language": "言語",
+      "languageOptions": {
+        "none": "指定なし",
+        "ja": "日本語",
+        "en": "英語"
+      },
+      "duration": "動画の長さ",
+      "durationOptions": {
+        "any": "すべて",
+        "short": "ショート（4分以下）",
+        "medium": "ミディアム（4〜20分）",
+        "long": "ロング（20分以上）"
+      },
+      "button": "検索",
+      "searching": "検索中..."
+    },
+    "result": {
+      "sort": {
+        "viewCount": "再生回数",
+        "engagementRate": "エンゲージメント率",
+        "publishedAt": "公開日"
+      },
+      "empty": {
+        "initial": "検索条件を入力して検索してください",
+        "noResults": "該当する動画が見つかりませんでした"
+      },
+      "viewCount": "再生回数",
+      "likeCount": "高評価",
+      "commentCount": "コメント",
+      "engagementRate": "ER",
+      "publishedAt": "公開日"
+    },
+    "pagination": {
+      "previous": "前へ",
+      "next": "次へ"
+    },
+    "errors": {
+      "searchFailed": "動画の検索に失敗しました"
     }
   },
   "errors": {
@@ -342,6 +412,10 @@
     "pricing": {
       "title": "料金プラン",
       "description": "あなたに最適なプランをお選びください。月額・年額プランをご用意しています。"
+    },
+    "youtubeResearchVideos": {
+      "title": "動画リサーチ",
+      "description": "伸びている動画を検索・分析して、トレンドを把握できます。"
     }
   }
 }
