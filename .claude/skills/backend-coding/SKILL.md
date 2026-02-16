@@ -66,7 +66,7 @@ src/backend/
         │   │   └── presentation.di.ts
         │   ├── application/
         │   │   ├── ports/
-        │   │   │   └── *.port.ts           # 内部ポート（認証・外部サービス連携など全て）
+        │   │   │   └── *.port.ts           # 内部ポート（認証・外部サービス連携用のみ）
         │   │   ├── queries/
         │   │   │   └── usecases/
         │   │   │       └── {usecase}/
@@ -115,16 +115,18 @@ src/backend/
 
 ### internal/（モジュール内部）
 - **di/** - 依存性注入の設定
-- **application/** - ユースケース実装、内部ポート（認証・外部サービス連携など全て `ports/` に配置）
+- **application/** - ユースケース実装、内部ポート（認証・外部サービス連携用のみ `ports/` に配置）
 - **domain/** - エンティティ、リポジトリインターフェース
 - **infrastructure/** - DB schemas、リポジトリ実装、アダプター
 - **presentation/** - actions、handlers
 
 ### public/（外部公開）
 - **errors/** - ドメインエラークラス（他モジュールやPresentation層から参照される）
-- **ports/** - ユースケースポート（Input/Output/Interface/Token）
+- **ports/** - ユースケースポート（Input/Output/ResultItem/Interface/Token を全て含む）
 
 **重要:** エラーとユースケースポートは `public/` に配置し、他モジュールから参照可能にする。
+
+**重要:** ユースケースの Input/Output/ResultItem 型は全て `public/ports/` のユースケースポートファイルに直接定義する。`internal/application/ports/` にユースケース用の型定義ファイルを別途作成しない。`internal/application/ports/` は認証・外部サービス連携など、ユースケース以外の内部ポートのみに使用する。
 
 ## レイヤー構成
 
@@ -284,6 +286,7 @@ export class ExampleHandlerImpl implements ExampleHandler {
 
 **重要: UseCase Port は `public/ports/` に配置し、外部から参照可能にする。**
 **UseCase の Output はドメイン型（Entity クラス）を直接返さず、DTO形式（プリミティブ型）で返す。**
+**Input/Output/ResultItem 型は全てこのファイルに直接定義する。`internal/application/ports/` にユースケース用の型定義ファイルを別途作成しない。**
 
 ```typescript
 // modules/{module}/public/ports/{usecase}.usecase.port.ts
@@ -293,21 +296,27 @@ export interface CreateExampleUseCasePortInput {
   email: string
 }
 
+// ResultItem 型もここに定義（Handler/Action から参照可能）
+export interface CreateExampleResultItem {
+  id: string
+  name: string
+  status: string
+  createdAt: Date
+  updatedAt: Date
+}
+
 // ✅ 正しい: DTO形式（プリミティブ型）で定義
 export interface CreateExampleUseCasePortOutput {
-  example: {
-    id: string
-    name: string
-    status: string
-    createdAt: Date
-    updatedAt: Date
-  }
+  example: CreateExampleResultItem
 }
 
 // ❌ 間違い: ドメイン型を直接返す
 // export interface CreateExampleUseCasePortOutput {
 //   example: Example  // Domain Entity を直接返さない
 // }
+
+// ❌ 間違い: internal/application/ports/ に別ファイルで型定義を作成する
+// → Input/Output/ResultItem 型は全て public/ports/ のこのファイルに集約する
 
 export interface CreateExampleUseCasePort {
   handle(
@@ -319,6 +328,8 @@ export const CreateExampleUseCasePortToken = Symbol("CreateExampleUseCasePort")
 ```
 
 ### 4. Port（外部サービス連携用・internal/application/ports/）
+
+**注意: `internal/application/ports/` は認証・外部サービス連携用のポートのみに使用する。ユースケースの Input/Output 型は `public/ports/` に定義する。**
 
 ```typescript
 // modules/{module}/internal/application/ports/create-example.port.ts
@@ -1150,8 +1161,8 @@ export class UuidV7Generator implements UuidV7GeneratorPort {
 1. `modules/{module}/internal/` と `modules/{module}/public/` ディレクトリを作成
 2. `public/errors/` にドメインエラーを定義
 3. `internal/domain/` にエンティティ、リポジトリインターフェースを定義
-4. `internal/application/ports/` に内部ポートを定義（認証・外部サービス連携など全て）
-5. `public/ports/` にユースケースポートを定義（外部公開用）
+4. `public/ports/` にユースケースポートを定義（Input/Output/ResultItem/Interface/Token を全て含む）
+5. `internal/application/ports/` に内部ポートを定義（認証・外部サービス連携用のみ。ユースケースの型定義は含めない）
 6. `internal/application/*/usecases/{usecase}/` にユースケースを実装
 7. `internal/infrastructure/db/mysql/drizzle/repositories/` にリポジトリ実装を追加
 8. `internal/infrastructure/modules/` にモジュール間アダプターを追加
@@ -1433,5 +1444,6 @@ export class FindExamplesMysqlDrizzleQueryService
 - [ ] Repository の戻り値は `null`（`undefined` ではない）
 - [ ] 型アサーション（as）を避ける（Repository の `Entity.reconstruct()` での列挙型マッピングは例外）
 - [ ] Drizzle Schema のタイムスタンプデフォルト値は `.default(sql\`CURRENT_TIMESTAMP(3)\`)`
-- [ ] 内部ポート（外部サービス連携含む）は `application/ports/` に配置
+- [ ] **ユースケースの Input/Output/ResultItem 型は `public/ports/` に直接定義（`internal/application/ports/` にユースケース用の型定義ファイルを作成しない）**
+- [ ] 内部ポート（認証・外部サービス連携用のみ）は `application/ports/` に配置
 - [ ] `pnpm type:check` が通ること（必須）

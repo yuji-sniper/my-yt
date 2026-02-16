@@ -3,12 +3,12 @@
 import { resolveContainer } from "@/backend/bootstrap/di/container"
 import type { ActionResponse } from "@/backend/modules/shared/presentation/actions/types/action-response"
 import { withRequestContext } from "@/backend/modules/shared/presentation/middleware/with-request-context"
-import type { SearchTrendingVideosResultItem } from "@/backend/modules/youtube-research/internal/application/ports/search-trending-videos.port"
 import type {
   SearchTrendingVideosHandler,
   SearchTrendingVideosHandlerInput
 } from "@/backend/modules/youtube-research/internal/presentation/handlers/search-trending-videos/search-trending-videos.handler"
 import { SearchTrendingVideosHandlerToken } from "@/backend/modules/youtube-research/internal/presentation/handlers/search-trending-videos/search-trending-videos.handler"
+import type { SearchTrendingVideosResultItem } from "@/backend/modules/youtube-research/public/ports/search-trending-videos.usecase.port"
 
 export type SearchTrendingVideosActionRequest = SearchTrendingVideosHandlerInput
 
