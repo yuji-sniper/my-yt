@@ -96,7 +96,6 @@ export const ProductEditPresentational = ({
           </CardHeader>
           <CardContent>
             <ProductForm
-              mode="edit"
               defaultValues={defaultValues}
               onSubmit={onSubmit}
               isPending={isPending}

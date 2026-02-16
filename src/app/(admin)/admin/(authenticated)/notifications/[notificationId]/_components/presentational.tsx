@@ -62,7 +62,6 @@ export const NotificationDetailPresentational = ({
         </CardHeader>
         <CardContent>
           <NotificationForm
-            mode="edit"
             defaultValues={defaultValues}
             onSubmit={onUpdate}
             isPending={isUpdatePending}
