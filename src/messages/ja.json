@@ -200,8 +200,59 @@
       "previous": "前へ",
       "next": "次へ"
     },
+    "channelSearch": {
+      "keyword": "キーワード",
+      "keywordPlaceholder": "チャンネル名・説明文で検索",
+      "createdPeriod": "開設時期",
+      "periodOptions": {
+        "3m": "直近3ヶ月",
+        "6m": "直近6ヶ月",
+        "1y": "直近1年",
+        "custom": "カスタム"
+      },
+      "dateFrom": "開始日",
+      "dateTo": "終了日",
+      "datePlaceholder": "日付を選択",
+      "region": "国",
+      "regionOptions": {
+        "none": "指定なし",
+        "JP": "日本",
+        "US": "アメリカ"
+      },
+      "language": "言語",
+      "languageOptions": {
+        "none": "指定なし",
+        "ja": "日本語",
+        "en": "英語"
+      },
+      "subscriberCount": "登録者数範囲",
+      "subscriberMin": "最小",
+      "subscriberMax": "最大",
+      "button": "検索",
+      "searching": "検索中..."
+    },
+    "channelResult": {
+      "sort": {
+        "growthSpeed": "成長速度",
+        "subscriberCount": "登録者数",
+        "viewCount": "総再生回数"
+      },
+      "empty": {
+        "initial": "検索条件を入力して検索してください",
+        "noResults": "該当するチャンネルが見つかりませんでした"
+      },
+      "subscriberCount": "登録者数",
+      "viewCount": "総再生回数",
+      "videoCount": "動画数",
+      "publishedAt": "開設日",
+      "daysSinceCreation": "{days}日",
+      "growthSpeed": "成長速度",
+      "growthSpeedUnit": "人/日",
+      "subscriberHidden": "非公開"
+    },
     "errors": {
-      "searchFailed": "動画の検索に失敗しました"
+      "searchFailed": "動画の検索に失敗しました",
+      "channelSearchFailed": "チャンネルの検索に失敗しました"
     }
   },
   "errors": {
@@ -416,6 +467,10 @@
     "youtubeResearchVideos": {
       "title": "動画リサーチ",
       "description": "伸びている動画を検索・分析して、トレンドを把握できます。"
+    },
+    "youtubeResearchChannels": {
+      "title": "チャンネルリサーチ",
+      "description": "急成長チャンネルを検索・分析して、トレンドを把握できます。"
     }
   }
 }

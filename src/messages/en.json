@@ -200,8 +200,59 @@
       "previous": "Previous",
       "next": "Next"
     },
+    "channelSearch": {
+      "keyword": "Keyword",
+      "keywordPlaceholder": "Search by channel name or description",
+      "createdPeriod": "Created Period",
+      "periodOptions": {
+        "3m": "Last 3 months",
+        "6m": "Last 6 months",
+        "1y": "Last 1 year",
+        "custom": "Custom"
+      },
+      "dateFrom": "Start Date",
+      "dateTo": "End Date",
+      "datePlaceholder": "Select a date",
+      "region": "Country",
+      "regionOptions": {
+        "none": "Any",
+        "JP": "Japan",
+        "US": "United States"
+      },
+      "language": "Language",
+      "languageOptions": {
+        "none": "Any",
+        "ja": "Japanese",
+        "en": "English"
+      },
+      "subscriberCount": "Subscriber Count Range",
+      "subscriberMin": "Min",
+      "subscriberMax": "Max",
+      "button": "Search",
+      "searching": "Searching..."
+    },
+    "channelResult": {
+      "sort": {
+        "growthSpeed": "Growth Speed",
+        "subscriberCount": "Subscribers",
+        "viewCount": "Total Views"
+      },
+      "empty": {
+        "initial": "Enter search criteria and click search",
+        "noResults": "No channels found"
+      },
+      "subscriberCount": "Subscribers",
+      "viewCount": "Total Views",
+      "videoCount": "Videos",
+      "publishedAt": "Created",
+      "daysSinceCreation": "{days} days",
+      "growthSpeed": "Growth Speed",
+      "growthSpeedUnit": "subs/day",
+      "subscriberHidden": "Hidden"
+    },
     "errors": {
-      "searchFailed": "Failed to search videos"
+      "searchFailed": "Failed to search videos",
+      "channelSearchFailed": "Failed to search channels"
     }
   },
   "errors": {
@@ -416,6 +467,10 @@
     "youtubeResearchVideos": {
       "title": "Video Research",
       "description": "Search and analyze trending videos to discover insights."
+    },
+    "youtubeResearchChannels": {
+      "title": "Channel Research",
+      "description": "Search and analyze fast-growing channels to discover trends."
     }
   }
 }

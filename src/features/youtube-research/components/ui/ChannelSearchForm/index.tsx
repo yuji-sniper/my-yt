@@ -29,19 +29,18 @@ import {
   SelectValue
 } from "@/components/ui/select"
 import { cn } from "@/lib/shadcn/utils"
-import type { SearchTrendingVideosParams } from "../../../types/trending-video"
-import type { VideoCategory } from "../../../types/video-category"
+import type { SearchGrowingChannelsParams } from "../../../types/growing-channel"
 
-const videoSearchFormSchema = z
+const channelSearchFormSchema = z
   .object({
     keyword: z.string().optional(),
-    categoryId: z.string().optional(),
-    period: z.enum(["7d", "30d", "90d", "custom"]),
+    period: z.enum(["3m", "6m", "1y", "custom"]),
     customDateFrom: z.date().optional(),
     customDateTo: z.date().optional(),
     regionCode: z.enum(["none", "JP", "US"]),
     relevanceLanguage: z.enum(["none", "ja", "en"]),
-    videoDuration: z.enum(["any", "short", "medium", "long"])
+    subscriberCountMin: z.string().optional(),
+    subscriberCountMax: z.string().optional()
   })
   .refine(
     (data) => {
@@ -53,56 +52,55 @@ const videoSearchFormSchema = z
     { path: ["customDateFrom"] }
   )
 
-type VideoSearchFormValues = z.infer<typeof videoSearchFormSchema>
+type ChannelSearchFormValues = z.infer<typeof channelSearchFormSchema>
 
-const VIDEO_SEARCH_FORM_DEFAULTS: VideoSearchFormValues = {
+const CHANNEL_SEARCH_FORM_DEFAULTS: ChannelSearchFormValues = {
   keyword: "",
-  categoryId: "all",
-  period: "7d",
+  period: "3m",
   customDateFrom: undefined,
   customDateTo: undefined,
   regionCode: "none",
   relevanceLanguage: "none",
-  videoDuration: "any"
+  subscriberCountMin: "",
+  subscriberCountMax: ""
 }
 
 type Props = {
-  categories: VideoCategory[]
-  onSearch: (params: SearchTrendingVideosParams) => void
+  onSearch: (params: SearchGrowingChannelsParams) => void
   isSearching: boolean
 }
 
-function calculatePublishedAfter(
-  period: VideoSearchFormValues["period"],
+const calculatePublishedAfter = (
+  period: ChannelSearchFormValues["period"],
   customDateFrom?: Date
-): string {
+): string => {
   if (period === "custom" && customDateFrom) {
     return customDateFrom.toISOString()
   }
 
   const now = new Date()
-  const daysMap: Record<string, number> = {
-    "7d": 7,
-    "30d": 30,
-    "90d": 90
+  const monthsMap: Record<string, number> = {
+    "3m": 3,
+    "6m": 6,
+    "1y": 12
   }
 
-  const days = daysMap[period] ?? 7
-  now.setDate(now.getDate() - days)
+  const months = monthsMap[period] ?? 3
+  now.setMonth(now.getMonth() - months)
   return now.toISOString()
 }
 
-function calculatePublishedBefore(
-  period: VideoSearchFormValues["period"],
+const calculatePublishedBefore = (
+  period: ChannelSearchFormValues["period"],
   customDateTo?: Date
-): string | undefined {
+): string | undefined => {
   if (period === "custom" && customDateTo) {
     return customDateTo.toISOString()
   }
   return undefined
 }
 
-function formatDateLabel(date: Date, locale: string): string {
+const formatDateLabel = (date: Date, locale: string): string => {
   return new Intl.DateTimeFormat(locale, {
     year: "numeric",
     month: "short",
@@ -110,18 +108,18 @@ function formatDateLabel(date: Date, locale: string): string {
   }).format(date)
 }
 
-export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
+export function ChannelSearchForm({ onSearch, isSearching }: Props) {
   const t = useTranslations("youtubeResearch")
 
-  const form = useForm<VideoSearchFormValues>({
-    resolver: zodResolver(videoSearchFormSchema),
-    defaultValues: VIDEO_SEARCH_FORM_DEFAULTS
+  const form = useForm<ChannelSearchFormValues>({
+    resolver: zodResolver(channelSearchFormSchema),
+    defaultValues: CHANNEL_SEARCH_FORM_DEFAULTS
   })
 
   const watchPeriod = form.watch("period")
 
-  const handleSubmit = (values: VideoSearchFormValues) => {
-    const params: SearchTrendingVideosParams = {
+  const handleSubmit = (values: ChannelSearchFormValues) => {
+    const params: SearchGrowingChannelsParams = {
       publishedAfter: calculatePublishedAfter(
         values.period,
         values.customDateFrom
@@ -133,12 +131,17 @@ export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
     }
 
     if (values.keyword) params.keyword = values.keyword
-    if (values.categoryId !== "all") params.categoryId = values.categoryId
     if (values.regionCode !== "none") params.regionCode = values.regionCode
     if (values.relevanceLanguage !== "none")
       params.relevanceLanguage = values.relevanceLanguage
-    if (values.videoDuration !== "any")
-      params.videoDuration = values.videoDuration
+    if (values.subscriberCountMin) {
+      const min = Number.parseInt(values.subscriberCountMin, 10)
+      if (!Number.isNaN(min)) params.subscriberCountMin = min
+    }
+    if (values.subscriberCountMax) {
+      const max = Number.parseInt(values.subscriberCountMax, 10)
+      if (!Number.isNaN(max)) params.subscriberCountMax = max
+    }
 
     onSearch(params)
   }
@@ -155,10 +158,10 @@ export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
             name="keyword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("search.keyword")}</FormLabel>
+                <FormLabel>{t("channelSearch.keyword")}</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t("search.keywordPlaceholder")}
+                    placeholder={t("channelSearch.keywordPlaceholder")}
                     {...field}
                   />
                 </FormControl>
@@ -169,71 +172,10 @@ export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
 
           <FormField
             control={form.control}
-            name="regionCode"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t("search.region")}</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue
-                        placeholder={t("search.regionOptions.none")}
-                      />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="none">
-                      {t("search.regionOptions.none")}
-                    </SelectItem>
-                    <SelectItem value="JP">
-                      {t("search.regionOptions.JP")}
-                    </SelectItem>
-                    <SelectItem value="US">
-                      {t("search.regionOptions.US")}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="categoryId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t("search.category")}</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
-                  <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue
-                        placeholder={t("search.categoryPlaceholder")}
-                      />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="all">
-                      {t("search.categoryAll")}
-                    </SelectItem>
-                    {categories.map((cat) => (
-                      <SelectItem key={cat.categoryId} value={cat.categoryId}>
-                        {cat.title}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
             name="period"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("search.period")}</FormLabel>
+                <FormLabel>{t("channelSearch.createdPeriod")}</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger className="w-full">
@@ -241,17 +183,48 @@ export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="7d">
-                      {t("search.periodOptions.7d")}
+                    <SelectItem value="3m">
+                      {t("channelSearch.periodOptions.3m")}
                     </SelectItem>
-                    <SelectItem value="30d">
-                      {t("search.periodOptions.30d")}
+                    <SelectItem value="6m">
+                      {t("channelSearch.periodOptions.6m")}
                     </SelectItem>
-                    <SelectItem value="90d">
-                      {t("search.periodOptions.90d")}
+                    <SelectItem value="1y">
+                      {t("channelSearch.periodOptions.1y")}
                     </SelectItem>
                     <SelectItem value="custom">
-                      {t("search.periodOptions.custom")}
+                      {t("channelSearch.periodOptions.custom")}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="regionCode"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("channelSearch.region")}</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue
+                        placeholder={t("channelSearch.regionOptions.none")}
+                      />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="none">
+                      {t("channelSearch.regionOptions.none")}
+                    </SelectItem>
+                    <SelectItem value="JP">
+                      {t("channelSearch.regionOptions.JP")}
+                    </SelectItem>
+                    <SelectItem value="US">
+                      {t("channelSearch.regionOptions.US")}
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -265,24 +238,24 @@ export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
             name="relevanceLanguage"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("search.language")}</FormLabel>
+                <FormLabel>{t("channelSearch.language")}</FormLabel>
                 <Select onValueChange={field.onChange} value={field.value}>
                   <FormControl>
                     <SelectTrigger className="w-full">
                       <SelectValue
-                        placeholder={t("search.languageOptions.none")}
+                        placeholder={t("channelSearch.languageOptions.none")}
                       />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="none">
-                      {t("search.languageOptions.none")}
+                      {t("channelSearch.languageOptions.none")}
                     </SelectItem>
                     <SelectItem value="ja">
-                      {t("search.languageOptions.ja")}
+                      {t("channelSearch.languageOptions.ja")}
                     </SelectItem>
                     <SelectItem value="en">
-                      {t("search.languageOptions.en")}
+                      {t("channelSearch.languageOptions.en")}
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -293,31 +266,27 @@ export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
 
           <FormField
             control={form.control}
-            name="videoDuration"
+            name="subscriberCountMin"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{t("search.duration")}</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value}>
+                <FormLabel>{t("channelSearch.subscriberCount")}</FormLabel>
+                <div className="flex items-center gap-2">
                   <FormControl>
-                    <SelectTrigger className="w-full">
-                      <SelectValue />
-                    </SelectTrigger>
+                    <Input
+                      type="number"
+                      min="0"
+                      placeholder={t("channelSearch.subscriberMin")}
+                      {...field}
+                    />
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="any">
-                      {t("search.durationOptions.any")}
-                    </SelectItem>
-                    <SelectItem value="short">
-                      {t("search.durationOptions.short")}
-                    </SelectItem>
-                    <SelectItem value="medium">
-                      {t("search.durationOptions.medium")}
-                    </SelectItem>
-                    <SelectItem value="long">
-                      {t("search.durationOptions.long")}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                  <span className="text-muted-foreground">〜</span>
+                  <Input
+                    type="number"
+                    min="0"
+                    placeholder={t("channelSearch.subscriberMax")}
+                    {...form.register("subscriberCountMax")}
+                  />
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -331,7 +300,7 @@ export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
               name="customDateFrom"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("search.dateFrom")}</FormLabel>
+                  <FormLabel>{t("channelSearch.dateFrom")}</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -345,7 +314,7 @@ export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
                           <CalendarIcon className="size-4" />
                           {field.value
                             ? formatDateLabel(field.value, "ja")
-                            : t("search.datePlaceholder")}
+                            : t("channelSearch.datePlaceholder")}
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
@@ -368,7 +337,7 @@ export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
               name="customDateTo"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("search.dateTo")}</FormLabel>
+                  <FormLabel>{t("channelSearch.dateTo")}</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
@@ -382,7 +351,7 @@ export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
                           <CalendarIcon className="size-4" />
                           {field.value
                             ? formatDateLabel(field.value, "ja")
-                            : t("search.datePlaceholder")}
+                            : t("channelSearch.datePlaceholder")}
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
@@ -407,12 +376,12 @@ export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
             {isSearching ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                {t("search.searching")}
+                {t("channelSearch.searching")}
               </>
             ) : (
               <>
                 <Search className="size-4" />
-                {t("search.button")}
+                {t("channelSearch.button")}
               </>
             )}
           </Button>
