@@ -4,6 +4,10 @@ import type { LoggerPort } from "@/backend/modules/shared/application/ports/logg
 import { LoggerPortToken } from "@/backend/modules/shared/application/ports/logger/logger.port"
 import type { Result } from "@/backend/modules/shared/presentation/handlers/types/result"
 import { formatZodErrors } from "@/backend/modules/shared/presentation/handlers/utils/format-zod-errors"
+import {
+  VIDEO_DURATION_VALUES,
+  VIDEO_SEARCH_ORDER_VALUES
+} from "@/backend/modules/youtube-research/internal/domain/youtube-api/youtube-api.types"
 import { YouTubeApiRequestFailedError } from "@/backend/modules/youtube-research/public/errors/youtube-research.errors"
 import type {
   SearchTrendingVideosResultItem,
@@ -20,7 +24,8 @@ const searchTrendingVideosSchema = z.object({
   publishedBefore: z.string().optional(),
   regionCode: z.string().length(2).optional(),
   relevanceLanguage: z.string().min(2).max(5).optional(),
-  videoDuration: z.enum(["any", "short", "medium", "long"]).optional(),
+  videoDuration: z.enum(VIDEO_DURATION_VALUES).optional(),
+  order: z.enum(VIDEO_SEARCH_ORDER_VALUES).optional(),
   pageToken: z.string().optional()
 })
 

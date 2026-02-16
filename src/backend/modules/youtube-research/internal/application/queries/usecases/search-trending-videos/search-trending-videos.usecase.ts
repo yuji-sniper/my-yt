@@ -37,6 +37,7 @@ export class SearchTrendingVideosUseCase
       regionCode: input.regionCode,
       relevanceLanguage: input.relevanceLanguage,
       videoDuration: input.videoDuration,
+      order: input.order,
       pageToken: input.pageToken
     })
 
@@ -56,6 +57,7 @@ export class SearchTrendingVideosUseCase
       regionCode: input.regionCode,
       relevanceLanguage: input.relevanceLanguage,
       videoDuration: input.videoDuration,
+      order: input.order,
       pageToken: input.pageToken,
       maxResults: 50
     })

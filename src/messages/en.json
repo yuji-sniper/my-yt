@@ -177,6 +177,14 @@
         "medium": "Medium (4-20 min)",
         "long": "Long (over 20 min)"
       },
+      "order": "Sort Order",
+      "orderOptions": {
+        "relevance": "Relevance",
+        "date": "Upload Date",
+        "rating": "Rating",
+        "title": "Title",
+        "viewCount": "View Count"
+      },
       "button": "Search",
       "searching": "Searching..."
     },

@@ -1,3 +1,8 @@
+import type {
+  VideoDuration,
+  VideoSearchOrder
+} from "@/backend/modules/youtube-research/internal/domain/youtube-api/youtube-api.types"
+
 export type TrendingVideo = {
   videoId: string
   title: string
@@ -19,7 +24,8 @@ export type SearchTrendingVideosParams = {
   publishedBefore?: string
   regionCode?: string
   relevanceLanguage?: string
-  videoDuration?: "any" | "short" | "medium" | "long"
+  videoDuration?: VideoDuration
+  order?: VideoSearchOrder
   pageToken?: string
 }
 

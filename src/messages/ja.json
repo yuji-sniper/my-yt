@@ -177,6 +177,14 @@
         "medium": "ミディアム（4〜20分）",
         "long": "ロング（20分以上）"
       },
+      "order": "並び順",
+      "orderOptions": {
+        "relevance": "関連度順",
+        "date": "公開日順",
+        "rating": "評価順",
+        "title": "タイトル順",
+        "viewCount": "再生回数順"
+      },
       "button": "検索",
       "searching": "検索中..."
     },

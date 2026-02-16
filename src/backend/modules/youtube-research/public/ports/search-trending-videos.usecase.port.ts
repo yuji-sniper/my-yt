@@ -1,3 +1,8 @@
+import type {
+  VideoDuration,
+  VideoSearchOrder
+} from "@/backend/modules/youtube-research/internal/domain/youtube-api/youtube-api.types"
+
 export interface SearchTrendingVideosUseCasePortInput {
   keyword?: string
   categoryId?: string
@@ -5,7 +10,8 @@ export interface SearchTrendingVideosUseCasePortInput {
   publishedBefore?: string
   regionCode?: string
   relevanceLanguage?: string
-  videoDuration?: "any" | "short" | "medium" | "long"
+  videoDuration?: VideoDuration
+  order?: VideoSearchOrder
   pageToken?: string
 }
 

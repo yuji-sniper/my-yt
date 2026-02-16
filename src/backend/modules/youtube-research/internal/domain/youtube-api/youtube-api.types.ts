@@ -141,6 +141,30 @@ export type YouTubeThumbnail = {
   height: number
 }
 
+// --- 検索パラメータ定数・型 ---
+
+export const VIDEO_DURATION_VALUES = ["any", "short", "medium", "long"] as const
+export type VideoDuration = (typeof VIDEO_DURATION_VALUES)[number]
+
+export const VIDEO_SEARCH_ORDER_VALUES = [
+  "relevance",
+  "date",
+  "rating",
+  "title",
+  "viewCount"
+] as const
+export type VideoSearchOrder = (typeof VIDEO_SEARCH_ORDER_VALUES)[number]
+
+export const CHANNEL_SEARCH_ORDER_VALUES = [
+  "relevance",
+  "date",
+  "rating",
+  "title",
+  "videoCount",
+  "viewCount"
+] as const
+export type ChannelSearchOrder = (typeof CHANNEL_SEARCH_ORDER_VALUES)[number]
+
 // --- 検索パラメータ型 ---
 
 export type YouTubeVideoSearchParams = {
@@ -150,10 +174,10 @@ export type YouTubeVideoSearchParams = {
   publishedAfter: string
   publishedBefore?: string
   videoCategoryId?: string
-  videoDuration?: "any" | "short" | "medium" | "long"
+  videoDuration?: VideoDuration
   maxResults?: number
   pageToken?: string
-  order?: "relevance" | "date" | "rating" | "title" | "viewCount"
+  order?: VideoSearchOrder
 }
 
 export type YouTubeChannelSearchParams = {
@@ -164,5 +188,5 @@ export type YouTubeChannelSearchParams = {
   publishedBefore?: string
   maxResults?: number
   pageToken?: string
-  order?: "relevance" | "date" | "rating" | "title" | "videoCount" | "viewCount"
+  order?: ChannelSearchOrder
 }

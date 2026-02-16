@@ -41,7 +41,8 @@ const videoSearchFormSchema = z
     customDateTo: z.date().optional(),
     regionCode: z.enum(["none", "JP", "US"]),
     relevanceLanguage: z.enum(["none", "ja", "en"]),
-    videoDuration: z.enum(["any", "short", "medium", "long"])
+    videoDuration: z.enum(["any", "short", "medium", "long"]),
+    order: z.enum(["relevance", "date", "rating", "title", "viewCount"])
   })
   .refine(
     (data) => {
@@ -63,7 +64,8 @@ const VIDEO_SEARCH_FORM_DEFAULTS: VideoSearchFormValues = {
   customDateTo: undefined,
   regionCode: "none",
   relevanceLanguage: "none",
-  videoDuration: "any"
+  videoDuration: "any",
+  order: "relevance"
 }
 
 type Props = {
@@ -139,6 +141,7 @@ export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
       params.relevanceLanguage = values.relevanceLanguage
     if (values.videoDuration !== "any")
       params.videoDuration = values.videoDuration
+    if (values.order !== "relevance") params.order = values.order
 
     onSearch(params)
   }
@@ -315,6 +318,41 @@ export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
                     </SelectItem>
                     <SelectItem value="long">
                       {t("search.durationOptions.long")}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="order"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("search.order")}</FormLabel>
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="relevance">
+                      {t("search.orderOptions.relevance")}
+                    </SelectItem>
+                    <SelectItem value="date">
+                      {t("search.orderOptions.date")}
+                    </SelectItem>
+                    <SelectItem value="rating">
+                      {t("search.orderOptions.rating")}
+                    </SelectItem>
+                    <SelectItem value="title">
+                      {t("search.orderOptions.title")}
+                    </SelectItem>
+                    <SelectItem value="viewCount">
+                      {t("search.orderOptions.viewCount")}
                     </SelectItem>
                   </SelectContent>
                 </Select>
