@@ -210,6 +210,10 @@
         "within3Months": "開設3ヶ月以内",
         "within6Months": "開設6ヶ月以内",
         "within1Year": "開設1年以内"
+      },
+      "channelAgeFilter": {
+        "label": "チャンネル開設期間",
+        "all": "すべて"
       }
     },
     "pagination": {

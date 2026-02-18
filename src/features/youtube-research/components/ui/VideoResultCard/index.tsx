@@ -3,19 +3,16 @@
 import Image from "next/image"
 import { useTranslations } from "next-intl"
 import { Badge } from "@/components/ui/badge"
-import type { TrendingVideo } from "../../../types/trending-video"
+import type {
+  ChannelAgeRange,
+  TrendingVideo
+} from "../../../types/trending-video"
+import { getChannelAgeRange } from "../../../utils/channel-age"
 
 type Props = {
   video: TrendingVideo
   locale: string
 }
-
-type ChannelAgeCategory =
-  | "within1Month"
-  | "within3Months"
-  | "within6Months"
-  | "within1Year"
-  | null
 
 function formatDuration(isoDuration: string): string {
   const match = isoDuration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
@@ -43,25 +40,7 @@ function formatDate(dateStr: string, locale: string): string {
   }).format(new Date(dateStr))
 }
 
-function getChannelAgeCategory(channelPublishedAt: string): ChannelAgeCategory {
-  if (!channelPublishedAt) return null
-
-  const now = new Date()
-  const published = new Date(channelPublishedAt)
-  const diffMs = now.getTime() - published.getTime()
-  const diffDays = diffMs / (1000 * 60 * 60 * 24)
-
-  if (diffDays <= 30) return "within1Month"
-  if (diffDays <= 90) return "within3Months"
-  if (diffDays <= 180) return "within6Months"
-  if (diffDays <= 365) return "within1Year"
-  return null
-}
-
-const channelAgeBadgeStyles: Record<
-  Exclude<ChannelAgeCategory, null>,
-  string
-> = {
+const channelAgeBadgeStyles: Record<Exclude<ChannelAgeRange, null>, string> = {
   within1Month: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
   within3Months:
     "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
@@ -73,7 +52,7 @@ const channelAgeBadgeStyles: Record<
 
 export function VideoResultCard({ video, locale }: Props) {
   const t = useTranslations("youtubeResearch")
-  const channelAge = getChannelAgeCategory(video.channelPublishedAt)
+  const channelAge = getChannelAgeRange(video.channelPublishedAt)
 
   return (
     <div
@@ -143,7 +122,8 @@ export function VideoResultCard({ video, locale }: Props) {
             {t("result.publishedAt")}: {formatDate(video.publishedAt, locale)}
           </span>
           <Badge variant="secondary" className="text-xs">
-            {t("result.engagementRate")}: {video.engagementRate.toFixed(2)}%
+            {t("result.engagementRate")}:{" "}
+            {(video.engagementRate ?? 0).toFixed(2)}%
           </Badge>
         </div>
       </div>

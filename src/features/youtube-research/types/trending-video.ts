@@ -58,3 +58,20 @@ export type SearchTrendingVideosResponse = {
   totalResults: number
   quotaUsed: number
 }
+
+export type ChannelAgeRange =
+  | "within1Month"
+  | "within3Months"
+  | "within6Months"
+  | "within1Year"
+  | null
+
+export const CHANNEL_AGE_FILTER_KEYS = {
+  all: "all",
+  within1Month: "within1Month",
+  within3Months: "within3Months",
+  within6Months: "within6Months",
+  within1Year: "within1Year"
+} as const
+export type ChannelAgeFilterKey =
+  (typeof CHANNEL_AGE_FILTER_KEYS)[keyof typeof CHANNEL_AGE_FILTER_KEYS]

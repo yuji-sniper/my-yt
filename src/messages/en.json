@@ -210,6 +210,10 @@
         "within3Months": "Created < 3 months",
         "within6Months": "Created < 6 months",
         "within1Year": "Created < 1 year"
+      },
+      "channelAgeFilter": {
+        "label": "Channel Age",
+        "all": "All"
       }
     },
     "pagination": {

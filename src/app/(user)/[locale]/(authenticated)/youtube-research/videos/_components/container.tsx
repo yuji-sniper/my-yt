@@ -6,11 +6,14 @@ import { toast } from "sonner"
 import { useGetVideoCategoriesQuery } from "@/features/youtube-research/hooks/queries/useGetVideoCategoriesQuery"
 import { useSearchTrendingVideosQuery } from "@/features/youtube-research/hooks/queries/useSearchTrendingVideosQuery"
 import {
+  CHANNEL_AGE_FILTER_KEYS,
+  type ChannelAgeFilterKey,
   type SearchTrendingVideosParams,
   type SortKey,
   type TrendingVideo,
   VIDEO_SORT_KEYS
 } from "@/features/youtube-research/types/trending-video"
+import { getChannelAgeRange } from "@/features/youtube-research/utils/channel-age"
 import { VideosPresentational } from "./presentational"
 
 const sortVideos = (
@@ -40,6 +43,9 @@ export function VideosContainer() {
   const [searchParams, setSearchParams] =
     useState<SearchTrendingVideosParams | null>(null)
   const [sortKey, setSortKey] = useState<SortKey>(VIDEO_SORT_KEYS.viewCount)
+  const [channelAgeFilter, setChannelAgeFilter] = useState<ChannelAgeFilterKey>(
+    CHANNEL_AGE_FILTER_KEYS.all
+  )
   const [pageTokenHistory, setPageTokenHistory] = useState<string[]>([])
   const [hasSearched, setHasSearched] = useState(false)
 
@@ -61,10 +67,15 @@ export function VideosContainer() {
     setPageTokenHistory([])
     setHasSearched(true)
     setSortKey(VIDEO_SORT_KEYS.viewCount)
+    setChannelAgeFilter(CHANNEL_AGE_FILTER_KEYS.all)
   }
 
   const handleSortChange = (key: SortKey) => {
     setSortKey(key)
+  }
+
+  const handleChannelAgeFilterChange = (key: ChannelAgeFilterKey) => {
+    setChannelAgeFilter(key)
   }
 
   const handleNextPage = () => {
@@ -83,16 +94,28 @@ export function VideosContainer() {
     })
   }
 
-  const sortedVideos = videosData ? sortVideos(videosData.items, sortKey) : []
+  const filteredVideos = videosData
+    ? channelAgeFilter === CHANNEL_AGE_FILTER_KEYS.all
+      ? videosData.items
+      : videosData.items.filter(
+          (video) =>
+            getChannelAgeRange(video.channelPublishedAt) === channelAgeFilter
+        )
+    : []
+
+  const sortedVideos = sortVideos(filteredVideos, sortKey)
 
   return (
     <VideosPresentational
       videos={sortedVideos}
+      totalVideoCount={videosData?.items.length ?? 0}
       categories={categoriesData?.items ?? []}
       isLoading={isVideosFetching}
       hasSearched={hasSearched}
       sortKey={sortKey}
       onSortChange={handleSortChange}
+      channelAgeFilter={channelAgeFilter}
+      onChannelAgeFilterChange={handleChannelAgeFilterChange}
       onSearch={handleSearch}
       hasNextPage={!!videosData?.nextPageToken}
       canGoPrevious={pageTokenHistory.length > 0}

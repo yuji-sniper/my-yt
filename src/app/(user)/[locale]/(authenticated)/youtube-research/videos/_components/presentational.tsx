@@ -4,6 +4,7 @@ import { VideoResultList } from "@/features/youtube-research/components/ui/Video
 import { VideoResultPagination } from "@/features/youtube-research/components/ui/VideoResultPagination"
 import { VideoSearchForm } from "@/features/youtube-research/components/ui/VideoSearchForm"
 import type {
+  ChannelAgeFilterKey,
   SearchTrendingVideosParams,
   SortKey,
   TrendingVideo
@@ -12,11 +13,14 @@ import type { VideoCategory } from "@/features/youtube-research/types/video-cate
 
 type Props = {
   videos: TrendingVideo[]
+  totalVideoCount: number
   categories: VideoCategory[]
   isLoading: boolean
   hasSearched: boolean
   sortKey: SortKey
   onSortChange: (key: SortKey) => void
+  channelAgeFilter: ChannelAgeFilterKey
+  onChannelAgeFilterChange: (key: ChannelAgeFilterKey) => void
   onSearch: (params: SearchTrendingVideosParams) => void
   hasNextPage: boolean
   canGoPrevious: boolean
@@ -27,11 +31,14 @@ type Props = {
 
 export function VideosPresentational({
   videos,
+  totalVideoCount,
   categories,
   isLoading,
   hasSearched,
   sortKey,
   onSortChange,
+  channelAgeFilter,
+  onChannelAgeFilterChange,
   onSearch,
   hasNextPage,
   canGoPrevious,
@@ -49,10 +56,13 @@ export function VideosPresentational({
 
       <VideoResultList
         videos={videos}
+        totalVideoCount={totalVideoCount}
         isLoading={isLoading}
         hasSearched={hasSearched}
         sortKey={sortKey}
         onSortChange={onSortChange}
+        channelAgeFilter={channelAgeFilter}
+        onChannelAgeFilterChange={onChannelAgeFilterChange}
         locale={locale}
       />
 
