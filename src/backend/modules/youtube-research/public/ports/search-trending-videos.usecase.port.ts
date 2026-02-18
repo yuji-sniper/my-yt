@@ -27,6 +27,8 @@ export interface SearchTrendingVideosResultItem {
   duration: string
   publishedAt: string
   engagementRate: number
+  channelPublishedAt: string
+  channelSubscriberCount: number
 }
 
 export interface SearchTrendingVideosUseCasePortOutput {

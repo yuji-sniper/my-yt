@@ -63,7 +63,7 @@ type VideoSearchFormValues = z.infer<typeof videoSearchFormSchema>
 const VIDEO_SEARCH_FORM_DEFAULTS: VideoSearchFormValues = {
   keyword: "",
   categoryId: "all",
-  period: "30d",
+  period: "90d",
   customDateFrom: undefined,
   customDateTo: undefined,
   regionCode: "none",

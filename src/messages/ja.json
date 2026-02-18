@@ -202,7 +202,13 @@
       "likeCount": "高評価",
       "commentCount": "コメント",
       "engagementRate": "ER",
-      "publishedAt": "公開日"
+      "publishedAt": "公開日",
+      "channelAge": {
+        "within1Month": "開設1ヶ月以内",
+        "within3Months": "開設3ヶ月以内",
+        "within6Months": "開設6ヶ月以内",
+        "within1Year": "開設1年以内"
+      }
     },
     "pagination": {
       "previous": "前へ",

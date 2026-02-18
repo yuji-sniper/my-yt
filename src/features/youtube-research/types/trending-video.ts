@@ -29,6 +29,8 @@ export type TrendingVideo = {
   duration: string
   publishedAt: string
   engagementRate: number
+  channelPublishedAt: string
+  channelSubscriberCount: number
 }
 
 export type SearchTrendingVideosParams = {

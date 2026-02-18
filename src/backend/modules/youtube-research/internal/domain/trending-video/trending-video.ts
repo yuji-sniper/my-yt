@@ -12,10 +12,15 @@ export class TrendingVideo {
     public readonly commentCount: number,
     public readonly duration: string,
     public readonly publishedAt: string,
-    public readonly engagementRate: number
+    public readonly engagementRate: number,
+    public readonly channelPublishedAt: string,
+    public readonly channelSubscriberCount: number
   ) {}
 
-  static create(video: YouTubeVideo): TrendingVideo {
+  static create(
+    video: YouTubeVideo,
+    channelInfo: { publishedAt: string; subscriberCount: number }
+  ): TrendingVideo {
     const viewCount = Number(video.statistics.viewCount)
     const likeCount = Number(video.statistics.likeCount)
     const commentCount = Number(video.statistics.commentCount)
@@ -34,7 +39,9 @@ export class TrendingVideo {
       commentCount,
       video.contentDetails.duration,
       video.snippet.publishedAt,
-      engagementRate
+      engagementRate,
+      channelInfo.publishedAt,
+      channelInfo.subscriberCount
     )
   }
 }

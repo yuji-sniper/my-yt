@@ -1,6 +1,13 @@
 "use client"
 
-import { Clock, Eye, MessageSquare, ThumbsUp } from "lucide-react"
+import {
+  Calendar,
+  Clock,
+  Eye,
+  MessageSquare,
+  ThumbsUp,
+  Users
+} from "lucide-react"
 import Image from "next/image"
 import { useTranslations } from "next-intl"
 import { Badge } from "@/components/ui/badge"
@@ -10,6 +17,13 @@ type Props = {
   video: TrendingVideo
   locale: string
 }
+
+type ChannelAgeCategory =
+  | "within1Month"
+  | "within3Months"
+  | "within6Months"
+  | "within1Year"
+  | null
 
 function formatDuration(isoDuration: string): string {
   const match = isoDuration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/)
@@ -37,8 +51,37 @@ function formatDate(dateStr: string, locale: string): string {
   }).format(new Date(dateStr))
 }
 
+function getChannelAgeCategory(channelPublishedAt: string): ChannelAgeCategory {
+  if (!channelPublishedAt) return null
+
+  const now = new Date()
+  const published = new Date(channelPublishedAt)
+  const diffMs = now.getTime() - published.getTime()
+  const diffDays = diffMs / (1000 * 60 * 60 * 24)
+
+  if (diffDays <= 30) return "within1Month"
+  if (diffDays <= 90) return "within3Months"
+  if (diffDays <= 180) return "within6Months"
+  if (diffDays <= 365) return "within1Year"
+  return null
+}
+
+const channelAgeBadgeStyles: Record<
+  Exclude<ChannelAgeCategory, null>,
+  string
+> = {
+  within1Month: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+  within3Months:
+    "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400",
+  within6Months:
+    "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400",
+  within1Year:
+    "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+}
+
 export function VideoResultCard({ video, locale }: Props) {
   const t = useTranslations("youtubeResearch")
+  const channelAge = getChannelAgeCategory(video.channelPublishedAt)
 
   return (
     <div
@@ -73,9 +116,25 @@ export function VideoResultCard({ video, locale }: Props) {
           {video.title}
         </a>
 
-        <p className="truncate text-xs text-muted-foreground">
-          {video.channelTitle}
-        </p>
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span className="truncate">{video.channelTitle}</span>
+          <span className="flex shrink-0 items-center gap-1">
+            <Users className="size-3" />
+            {formatNumber(video.channelSubscriberCount, locale)}
+          </span>
+          <span className="flex shrink-0 items-center gap-1">
+            <Calendar className="size-3" />
+            {formatDate(video.channelPublishedAt, locale)}
+          </span>
+          {channelAge && (
+            <Badge
+              variant="outline"
+              className={`shrink-0 border-0 text-[10px] ${channelAgeBadgeStyles[channelAge]}`}
+            >
+              {t(`result.channelAge.${channelAge}`)}
+            </Badge>
+          )}
+        </div>
 
         <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">

@@ -12,6 +12,7 @@ import type {
 
 const SEARCH_LIST_QUOTA = 100
 const VIDEOS_LIST_QUOTA = 1
+const CHANNELS_LIST_QUOTA = 1
 
 @injectable()
 export class SearchTrendingVideosUseCase
@@ -80,10 +81,31 @@ export class SearchTrendingVideosUseCase
     // 4. videos.list で統計情報を一括取得
     const videos = await this.youtubeApi.getVideos(videoIds)
 
-    // 5. TrendingVideo ドメインモデル生成
-    const trendingVideos = videos.map((video) => TrendingVideo.create(video))
+    // 5. channels.list でチャンネル情報を一括取得
+    const channelIds = [...new Set(videos.map((v) => v.snippet.channelId))]
+    const channels = await this.youtubeApi.getChannels(channelIds)
+    const channelMap = new Map(
+      channels.map((ch) => [
+        ch.id,
+        {
+          publishedAt: ch.snippet.publishedAt,
+          subscriberCount: Number(ch.statistics.subscriberCount)
+        }
+      ])
+    )
 
-    // 6. DTO に変換
+    // 6. TrendingVideo ドメインモデル生成
+    const trendingVideos = videos.map((video) =>
+      TrendingVideo.create(
+        video,
+        channelMap.get(video.snippet.channelId) ?? {
+          publishedAt: "",
+          subscriberCount: 0
+        }
+      )
+    )
+
+    // 7. DTO に変換
     const result: SearchTrendingVideosUseCasePortOutput = {
       items: trendingVideos.map((tv) => ({
         videoId: tv.videoId,
@@ -96,14 +118,16 @@ export class SearchTrendingVideosUseCase
         commentCount: tv.commentCount,
         duration: tv.duration,
         publishedAt: tv.publishedAt,
-        engagementRate: tv.engagementRate
+        engagementRate: tv.engagementRate,
+        channelPublishedAt: tv.channelPublishedAt,
+        channelSubscriberCount: tv.channelSubscriberCount
       })),
       nextPageToken: searchResponse.nextPageToken,
       totalResults: searchResponse.pageInfo.totalResults,
-      quotaUsed: SEARCH_LIST_QUOTA + VIDEOS_LIST_QUOTA
+      quotaUsed: SEARCH_LIST_QUOTA + VIDEOS_LIST_QUOTA + CHANNELS_LIST_QUOTA
     }
 
-    // 7. キャッシュに保存
+    // 8. キャッシュに保存
     await this.cache.set(cacheKey, "trending-video", result)
 
     return result
