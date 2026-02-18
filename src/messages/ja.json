@@ -203,6 +203,8 @@
       "commentCount": "コメント",
       "engagementRate": "ER",
       "publishedAt": "公開日",
+      "subscriberCount": "登録者",
+      "channelCreated": "チャンネル開設",
       "channelAge": {
         "within1Month": "開設1ヶ月以内",
         "within3Months": "開設3ヶ月以内",

@@ -1,13 +1,5 @@
 "use client"
 
-import {
-  Calendar,
-  Clock,
-  Eye,
-  MessageSquare,
-  ThumbsUp,
-  Users
-} from "lucide-react"
 import Image from "next/image"
 import { useTranslations } from "next-intl"
 import { Badge } from "@/components/ui/badge"
@@ -118,12 +110,12 @@ export function VideoResultCard({ video, locale }: Props) {
 
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
           <span className="truncate">{video.channelTitle}</span>
-          <span className="flex shrink-0 items-center gap-1">
-            <Users className="size-3" />
+          <span className="shrink-0">
+            {t("result.subscriberCount")}:{" "}
             {formatNumber(video.channelSubscriberCount, locale)}
           </span>
-          <span className="flex shrink-0 items-center gap-1">
-            <Calendar className="size-3" />
+          <span className="shrink-0">
+            {t("result.channelCreated")}:{" "}
             {formatDate(video.channelPublishedAt, locale)}
           </span>
           {channelAge && (
@@ -137,21 +129,18 @@ export function VideoResultCard({ video, locale }: Props) {
         </div>
 
         <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <Eye className="size-3.5" />
-            {formatNumber(video.viewCount, locale)}
+          <span>
+            {t("result.viewCount")}: {formatNumber(video.viewCount, locale)}
           </span>
-          <span className="flex items-center gap-1">
-            <ThumbsUp className="size-3.5" />
-            {formatNumber(video.likeCount, locale)}
+          <span>
+            {t("result.likeCount")}: {formatNumber(video.likeCount, locale)}
           </span>
-          <span className="flex items-center gap-1">
-            <MessageSquare className="size-3.5" />
+          <span>
+            {t("result.commentCount")}:{" "}
             {formatNumber(video.commentCount, locale)}
           </span>
-          <span className="flex items-center gap-1">
-            <Clock className="size-3.5" />
-            {formatDate(video.publishedAt, locale)}
+          <span>
+            {t("result.publishedAt")}: {formatDate(video.publishedAt, locale)}
           </span>
           <Badge variant="secondary" className="text-xs">
             {t("result.engagementRate")}: {video.engagementRate.toFixed(2)}%
