@@ -13,7 +13,7 @@ import {
   type TrendingVideo,
   VIDEO_SORT_KEYS
 } from "@/features/youtube-research/types/trending-video"
-import { getChannelAgeRange } from "@/features/youtube-research/utils/channel-age"
+import { isWithinChannelAge } from "@/features/youtube-research/utils/channel-age"
 import { VideosPresentational } from "./presentational"
 
 const sortVideos = (
@@ -95,12 +95,9 @@ export function VideosContainer() {
   }
 
   const filteredVideos = videosData
-    ? channelAgeFilter === CHANNEL_AGE_FILTER_KEYS.all
-      ? videosData.items
-      : videosData.items.filter(
-          (video) =>
-            getChannelAgeRange(video.channelPublishedAt) === channelAgeFilter
-        )
+    ? videosData.items.filter((video) =>
+        isWithinChannelAge(video.channelPublishedAt, channelAgeFilter)
+      )
     : []
 
   const sortedVideos = sortVideos(filteredVideos, sortKey)
