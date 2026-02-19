@@ -801,24 +801,19 @@ export const initExampleDependency = (container: DependencyContainer) => {
 
 **注意:** タイムスタンプ型は `timestamp` または `datetime` を使用する（既存モジュールに合わせる）。デフォルト値は `.default(sql\`CURRENT_TIMESTAMP(3)\`)` を使用する（`.defaultNow()` は使わない）。
 
+**重要: モジュール間を超えた外部キー制約は張らない。** 例えば `userId` カラムで `users` テーブルを参照する場合でも、`foreignKey()` や `references()` は使用しない。モジュール間の整合性はアプリケーション層で担保する。外部キー制約は同一モジュール内のテーブル間でのみ使用する。
+
 ```typescript
 // modules/{module}/internal/infrastructure/db/mysql/drizzle/schemas/{table}.ts
-import { relations, sql } from "drizzle-orm"
+import { sql } from "drizzle-orm"
 import {
   boolean,
-  foreignKey,
   index,
   mysqlTable,
   text,
   timestamp,
   varchar
 } from "drizzle-orm/mysql-core"
-import { users } from "@/backend/modules/auth/internal/infrastructure/db/mysql/drizzle/schemas"
-
-// 外部キー制約名の定数化（外部キーがある場合）
-export const EXAMPLES_CONSTRAINTS = {
-  USER_ID_FOREIGN_KEY: "examples_user_id_users_id_fk"
-} as const
 
 export const examples = mysqlTable(
   "examples",
@@ -837,22 +832,10 @@ export const examples = mysqlTable(
       .$onUpdate(() => new Date())
   },
   (table) => [
-    foreignKey({
-      columns: [table.userId],
-      foreignColumns: [users.id],
-      name: EXAMPLES_CONSTRAINTS.USER_ID_FOREIGN_KEY
-    }).onDelete("cascade"),
     index("idx_examples_user_id").on(table.userId),
     index("idx_examples_external_id").on(table.externalId)
   ]
 )
-
-export const examplesRelations = relations(examples, ({ one }) => ({
-  user: one(users, {
-    fields: [examples.userId],
-    references: [users.id]
-  })
-}))
 ```
 
 ```typescript
@@ -1427,7 +1410,7 @@ export class FindExamplesMysqlDrizzleQueryService
 - [ ] Repository のファイル名は `{entity}.mysql-drizzle.repository.ts`
 - [ ] Repository は `infrastructure/db/mysql/drizzle/repositories/` に配置
 - [ ] Repository の import はエイリアスパス（`@/backend/...`）を使用
-- [ ] Drizzle Schema で外部キー制約名を定数化（外部キーがある場合）
+- [ ] Drizzle Schema でモジュール間を超えた外部キー制約を張らない（同一モジュール内のみ許可）
 - [ ] Drizzle Schema で適切なインデックスを定義
 - [ ] Drizzle Schema の JSON カラムに `$type<>()` で型指定
 - [ ] **Schema を `bootstrap/db/schemas/index.ts` にエクスポート追加**
