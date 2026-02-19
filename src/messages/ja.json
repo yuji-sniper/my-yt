@@ -279,6 +279,20 @@
       "growthSpeedUnit": "回/日",
       "subscriberHidden": "非公開"
     },
+    "preset": {
+      "save": "プリセット保存",
+      "saveTitle": "検索プリセットの保存",
+      "nameLabel": "プリセット名",
+      "namePlaceholder": "例: 日本語ゲーム動画",
+      "saveButton": "保存",
+      "saving": "保存中...",
+      "saveSuccess": "プリセットを保存しました",
+      "saveFailed": "プリセットの保存に失敗しました",
+      "deleteSuccess": "プリセットを削除しました",
+      "deleteFailed": "プリセットの削除に失敗しました",
+      "limitExceeded": "プリセットは最大20件まで保存できます",
+      "duplicateName": "同じ名前のプリセットが既に存在します"
+    },
     "errors": {
       "searchFailed": "動画の検索に失敗しました",
       "channelSearchFailed": "チャンネルの検索に失敗しました"

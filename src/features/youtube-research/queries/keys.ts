@@ -8,3 +8,5 @@ export const videoCategoriesKey = () => ["video-categories"] as const
 
 export const growingChannelsKey = (params: SearchGrowingChannelsParams) =>
   ["growing-channels", params] as const
+
+export const videoSearchPresetsKey = () => ["video-search-presets"] as const

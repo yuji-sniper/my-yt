@@ -1,9 +1,13 @@
 "use client"
 
 import { useLocale, useTranslations } from "next-intl"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
+import type { VideoSearchFormRef } from "@/features/youtube-research/components/ui/VideoSearchForm"
+import { useCreateVideoSearchPresetMutation } from "@/features/youtube-research/hooks/mutations/useCreateVideoSearchPresetMutation"
+import { useDeleteVideoSearchPresetMutation } from "@/features/youtube-research/hooks/mutations/useDeleteVideoSearchPresetMutation"
 import { useGetVideoCategoriesQuery } from "@/features/youtube-research/hooks/queries/useGetVideoCategoriesQuery"
+import { useGetVideoSearchPresetsQuery } from "@/features/youtube-research/hooks/queries/useGetVideoSearchPresetsQuery"
 import { useSearchTrendingVideosQuery } from "@/features/youtube-research/hooks/queries/useSearchTrendingVideosQuery"
 import {
   CHANNEL_AGE_FILTER_KEYS,
@@ -14,6 +18,8 @@ import {
   VIDEO_SORT_KEYS
 } from "@/features/youtube-research/types/trending-video"
 import { isWithinChannelAge } from "@/features/youtube-research/utils/channel-age"
+import { VIDEO_SEARCH_PRESET_ERROR_CODES } from "@/shared/errors/video-search-preset.errors"
+import { ServerError } from "@/utils/error/server-error"
 import { VideosPresentational } from "./presentational"
 
 const sortVideos = (
@@ -40,6 +46,8 @@ export function VideosContainer() {
   const locale = useLocale()
   const t = useTranslations("youtubeResearch")
 
+  const formRef = useRef<VideoSearchFormRef>(null)
+
   const [searchParams, setSearchParams] =
     useState<SearchTrendingVideosParams | null>(null)
   const [sortKey, setSortKey] = useState<SortKey>(VIDEO_SORT_KEYS.viewCount)
@@ -48,6 +56,7 @@ export function VideosContainer() {
   )
   const [pageTokenHistory, setPageTokenHistory] = useState<string[]>([])
   const [hasSearched, setHasSearched] = useState(false)
+  const [isSavePresetDialogOpen, setIsSavePresetDialogOpen] = useState(false)
 
   const { data: categoriesData } = useGetVideoCategoriesQuery()
   const {
@@ -55,6 +64,10 @@ export function VideosContainer() {
     isFetching: isVideosFetching,
     isError: isVideosError
   } = useSearchTrendingVideosQuery(searchParams)
+
+  const { data: presetsData } = useGetVideoSearchPresetsQuery()
+  const createPresetMutation = useCreateVideoSearchPresetMutation()
+  const deletePresetMutation = useDeleteVideoSearchPresetMutation()
 
   useEffect(() => {
     if (isVideosError) {
@@ -94,6 +107,45 @@ export function VideosContainer() {
     })
   }
 
+  const handleSavePreset = async (name: string) => {
+    const currentValues = formRef.current?.getValues()
+    if (!currentValues) return
+
+    try {
+      await createPresetMutation.mutateAsync({
+        name,
+        searchParams: currentValues
+      })
+      toast.success(t("preset.saveSuccess"))
+      setIsSavePresetDialogOpen(false)
+    } catch (e) {
+      if (e instanceof ServerError) {
+        if (e.code === VIDEO_SEARCH_PRESET_ERROR_CODES.LIMIT_EXCEEDED) {
+          toast.error(t("preset.limitExceeded"))
+          return
+        }
+        if (e.code === VIDEO_SEARCH_PRESET_ERROR_CODES.DUPLICATE_NAME) {
+          toast.error(t("preset.duplicateName"))
+          return
+        }
+      }
+      toast.error(t("preset.saveFailed"))
+    }
+  }
+
+  const handleApplyPreset = (searchParamsRecord: Record<string, unknown>) => {
+    formRef.current?.reset(searchParamsRecord)
+  }
+
+  const handleDeletePreset = async (presetId: string) => {
+    try {
+      await deletePresetMutation.mutateAsync({ presetId })
+      toast.success(t("preset.deleteSuccess"))
+    } catch {
+      toast.error(t("preset.deleteFailed"))
+    }
+  }
+
   const filteredVideos = videosData
     ? videosData.items.filter((video) =>
         isWithinChannelAge(video.channelPublishedAt, channelAgeFilter)
@@ -119,6 +171,15 @@ export function VideosContainer() {
       onNextPage={handleNextPage}
       onPreviousPage={handlePreviousPage}
       locale={locale}
+      formRef={formRef}
+      presets={presetsData?.presets ?? []}
+      isSavePresetDialogOpen={isSavePresetDialogOpen}
+      onOpenSavePresetDialog={() => setIsSavePresetDialogOpen(true)}
+      onCloseSavePresetDialog={() => setIsSavePresetDialogOpen(false)}
+      onSavePreset={handleSavePreset}
+      isSavingPreset={createPresetMutation.isPending}
+      onApplyPreset={handleApplyPreset}
+      onDeletePreset={handleDeletePreset}
     />
   )
 }

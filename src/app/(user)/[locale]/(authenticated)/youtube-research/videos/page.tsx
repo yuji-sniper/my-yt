@@ -2,7 +2,11 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
 import type { Metadata } from "next"
 import { getTranslations, setRequestLocale } from "next-intl/server"
 import { getVideoCategoriesQuery } from "@/features/youtube-research/queries/get-video-categories"
-import { videoCategoriesKey } from "@/features/youtube-research/queries/keys"
+import { getVideoSearchPresetsQuery } from "@/features/youtube-research/queries/get-video-search-presets"
+import {
+  videoCategoriesKey,
+  videoSearchPresetsKey
+} from "@/features/youtube-research/queries/keys"
 import { getQueryClient } from "@/lib/react-query/query-client"
 import { VideosContainer } from "./_components/container"
 
@@ -29,10 +33,16 @@ export default async function VideosPage({ params }: Props) {
 
   const queryClient = getQueryClient()
 
-  await queryClient.prefetchQuery({
-    queryKey: videoCategoriesKey(),
-    queryFn: () => getVideoCategoriesQuery()
-  })
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: videoCategoriesKey(),
+      queryFn: () => getVideoCategoriesQuery()
+    }),
+    queryClient.prefetchQuery({
+      queryKey: videoSearchPresetsKey(),
+      queryFn: () => getVideoSearchPresetsQuery()
+    })
+  ])
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

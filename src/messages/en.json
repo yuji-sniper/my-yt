@@ -279,6 +279,20 @@
       "growthSpeedUnit": "times/day",
       "subscriberHidden": "Hidden"
     },
+    "preset": {
+      "save": "Save Preset",
+      "saveTitle": "Save Search Preset",
+      "nameLabel": "Preset Name",
+      "namePlaceholder": "e.g. Japanese gaming videos",
+      "saveButton": "Save",
+      "saving": "Saving...",
+      "saveSuccess": "Preset saved successfully",
+      "saveFailed": "Failed to save preset",
+      "deleteSuccess": "Preset deleted successfully",
+      "deleteFailed": "Failed to delete preset",
+      "limitExceeded": "You can save up to 20 presets",
+      "duplicateName": "A preset with the same name already exists"
+    },
     "errors": {
       "searchFailed": "Failed to search videos",
       "channelSearchFailed": "Failed to search channels"

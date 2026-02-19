@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CalendarIcon, Loader2, Search } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { type Ref, useImperativeHandle } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/components/ui/button"
@@ -72,10 +73,16 @@ const VIDEO_SEARCH_FORM_DEFAULTS: VideoSearchFormValues = {
   order: VIDEO_SEARCH_ORDERS.viewCount
 }
 
+export type VideoSearchFormRef = {
+  reset: (values: Record<string, unknown>) => void
+  getValues: () => Record<string, unknown>
+}
+
 type Props = {
   categories: VideoCategory[]
   onSearch: (params: SearchTrendingVideosParams) => void
   isSearching: boolean
+  formRef?: Ref<VideoSearchFormRef>
 }
 
 function truncateToDate(date: Date): string {
@@ -121,13 +128,56 @@ function formatDateLabel(date: Date, locale: string): string {
   }).format(date)
 }
 
-export function VideoSearchForm({ categories, onSearch, isSearching }: Props) {
+function toDateOrUndefined(value: unknown): Date | undefined {
+  if (value instanceof Date) return value
+  if (typeof value === "string") return new Date(value)
+  return undefined
+}
+
+function deserializeFormValues(
+  values: Record<string, unknown>
+): VideoSearchFormValues {
+  const preprocessed = {
+    ...VIDEO_SEARCH_FORM_DEFAULTS,
+    ...values,
+    customDateFrom: toDateOrUndefined(values.customDateFrom),
+    customDateTo: toDateOrUndefined(values.customDateTo)
+  }
+  const result = videoSearchFormSchema.safeParse(preprocessed)
+  return result.success ? result.data : VIDEO_SEARCH_FORM_DEFAULTS
+}
+
+function serializeFormValues(
+  values: VideoSearchFormValues
+): Record<string, unknown> {
+  return {
+    ...values,
+    customDateFrom: values.customDateFrom?.toISOString(),
+    customDateTo: values.customDateTo?.toISOString()
+  }
+}
+
+export function VideoSearchForm({
+  categories,
+  onSearch,
+  isSearching,
+  formRef
+}: Props) {
   const t = useTranslations("youtubeResearch")
 
   const form = useForm<VideoSearchFormValues>({
     resolver: zodResolver(videoSearchFormSchema),
     defaultValues: VIDEO_SEARCH_FORM_DEFAULTS
   })
+
+  useImperativeHandle(formRef, () => ({
+    reset: (values: Record<string, unknown>) => {
+      form.reset(deserializeFormValues(values))
+    },
+    getValues: () => {
+      return serializeFormValues(form.getValues())
+    }
+  }))
 
   const watchPeriod = form.watch("period")
 
