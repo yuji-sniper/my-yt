@@ -18,7 +18,7 @@ export function VideoSearchPresetList({ presets, onApply, onDelete }: Props) {
   return (
     <div data-slot="video-search-preset-list" className="flex flex-wrap gap-2">
       {presets.map((preset) => (
-        <div key={preset.id} className="flex items-center gap-0.5">
+        <div key={preset.id} className="flex items-center">
           <Badge
             variant="secondary"
             className="cursor-pointer select-none hover:bg-secondary/80"
@@ -32,7 +32,7 @@ export function VideoSearchPresetList({ presets, onApply, onDelete }: Props) {
             onClick={() => onDelete(preset.id)}
             aria-label={`Delete ${preset.name}`}
           >
-            <X className="size-3" />
+            <X className="size-3 cursor-pointer" />
           </button>
         </div>
       ))}

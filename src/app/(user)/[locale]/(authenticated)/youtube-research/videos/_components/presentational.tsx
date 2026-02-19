@@ -78,11 +78,25 @@ export function VideosPresentational({
 
   return (
     <div className="flex flex-col gap-6">
-      <VideoSearchPresetList
-        presets={presets}
-        onApply={onApplyPreset}
-        onDelete={onDeletePreset}
-      />
+      <div className="flex justify-between gap-2">
+        <VideoSearchPresetList
+          presets={presets}
+          onApply={onApplyPreset}
+          onDelete={onDeletePreset}
+        />
+
+        <div className="flex justify-center">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onOpenSavePresetDialog}
+          >
+            <Bookmark className="size-4" />
+            {t("preset.save")}
+          </Button>
+        </div>
+      </div>
 
       <VideoSearchForm
         categories={categories}
@@ -90,18 +104,6 @@ export function VideosPresentational({
         isSearching={isLoading}
         formRef={formRef}
       />
-
-      <div className="flex justify-center">
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={onOpenSavePresetDialog}
-        >
-          <Bookmark className="size-4" />
-          {t("preset.save")}
-        </Button>
-      </div>
 
       <SaveVideoSearchPresetDialog
         open={isSavePresetDialogOpen}

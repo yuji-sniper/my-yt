@@ -1,4 +1,4 @@
-import { and, desc, eq, sql } from "drizzle-orm"
+import { and, eq, sql } from "drizzle-orm"
 import { inject, injectable } from "tsyringe"
 import { GetDb } from "@/backend/modules/shared/infrastructure/db/mysql/drizzle/get-db"
 import { VideoSearchPreset } from "@/backend/modules/youtube-research/internal/domain/video-search-preset/video-search-preset"
@@ -43,7 +43,6 @@ export class VideoSearchPresetMysqlDrizzleRepository
       .select()
       .from(videoSearchPresets)
       .where(eq(videoSearchPresets.userId, userId))
-      .orderBy(desc(videoSearchPresets.createdAt))
 
     return rows.map((row) =>
       VideoSearchPreset.reconstruct({
