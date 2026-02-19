@@ -15,6 +15,13 @@
       "when": 1771218763272,
       "tag": "0001_add-youtube-research-tables",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1771522675009,
+      "tag": "0002_add-video-search-presets-table",
+      "breakpoints": true
     }
   ]
 }
