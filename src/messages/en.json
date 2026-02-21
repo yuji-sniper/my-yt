@@ -214,7 +214,8 @@
       "channelAgeFilter": {
         "label": "Channel Age",
         "all": "All"
-      }
+      },
+      "copyLink": "Copy link"
     },
     "pagination": {
       "previous": "Previous",

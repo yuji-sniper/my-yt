@@ -214,7 +214,8 @@
       "channelAgeFilter": {
         "label": "チャンネル開設期間",
         "all": "すべて"
-      }
+      },
+      "copyLink": "リンクをコピー"
     },
     "pagination": {
       "previous": "前へ",

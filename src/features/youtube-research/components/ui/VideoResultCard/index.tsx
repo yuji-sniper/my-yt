@@ -1,7 +1,9 @@
 "use client"
 
+import { Check, Copy } from "lucide-react"
 import Image from "next/image"
 import { useTranslations } from "next-intl"
+import { useState } from "react"
 import { Badge } from "@/components/ui/badge"
 import type {
   ChannelAgeRange,
@@ -53,14 +55,36 @@ const channelAgeBadgeStyles: Record<Exclude<ChannelAgeRange, null>, string> = {
 export function VideoResultCard({ video, locale }: Props) {
   const t = useTranslations("youtubeResearch")
   const channelAge = getChannelAgeRange(video.channelPublishedAt)
+  const [copied, setCopied] = useState(false)
+
+  const videoUrl = `https://www.youtube.com/watch?v=${video.videoId}`
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(videoUrl)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   return (
     <div
       data-slot="video-result-card"
-      className="flex gap-4 rounded-lg border bg-card p-4 transition-colors hover:bg-accent/50"
+      className="group relative flex gap-4 rounded-lg border bg-card p-4 transition-colors hover:bg-accent/50"
     >
+      <button
+        type="button"
+        onClick={handleCopy}
+        className="absolute top-2 right-2 rounded-md p-1.5 text-muted-foreground cursor-pointer hover:bg-accent hover:text-foreground"
+        title={t("result.copyLink")}
+      >
+        {copied ? (
+          <Check className="size-4 text-green-500" />
+        ) : (
+          <Copy className="size-4" />
+        )}
+      </button>
+
       <a
-        href={`https://www.youtube.com/watch?v=${video.videoId}`}
+        href={videoUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="relative shrink-0 overflow-hidden rounded-md"
@@ -79,7 +103,7 @@ export function VideoResultCard({ video, locale }: Props) {
 
       <div className="flex min-w-0 flex-1 flex-col gap-1.5">
         <a
-          href={`https://www.youtube.com/watch?v=${video.videoId}`}
+          href={videoUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="line-clamp-2 text-sm font-medium hover:text-primary"
